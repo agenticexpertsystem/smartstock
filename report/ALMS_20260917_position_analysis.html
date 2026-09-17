@@ -1,0 +1,1639 @@
+<!doctype html><html lang='zh' data-lang='zh' data-title-zh='ALMS 投资分析' data-title-en='ALMS investment analysis'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1,viewport-fit=cover'><title>ALMS 投资分析</title><style>
+html[data-lang="zh"] [lang="en"]:not(html), html[data-lang="en"] [lang="zh"]:not(html){display:none!important}
+.lang-toggle{position:fixed;top:calc(env(safe-area-inset-top,0px) + 10px);right:12px;z-index:50;display:flex;
+border:1px solid var(--line,#ccc);border-radius:999px;overflow:hidden;background:var(--card,#fff);font:12px/1 system-ui,sans-serif}
+.lang-toggle button{border:0;background:transparent;color:var(--muted,#666);padding:6px 10px;cursor:pointer}
+html[data-lang="zh"] .lang-toggle button[data-l="zh"], html[data-lang="en"] .lang-toggle button[data-l="en"]{background:var(--accent,#2f5bd3);color:#fff}
+</style>
+<script>(function(){var l;try{l=localStorage.getItem('report-lang')}catch(e){}
+if(l!=='zh'&&l!=='en'){l=(navigator.language||'').toLowerCase().indexOf('zh')===0?'zh':'en'}
+document.documentElement.setAttribute('data-lang',l);
+window.setLang=function(x){document.documentElement.setAttribute('data-lang',x);try{localStorage.setItem('report-lang',x)}catch(e){}
+document.title=document.documentElement.getAttribute('data-title-'+x)||document.title};
+document.addEventListener('DOMContentLoaded',function(){setLang(document.documentElement.getAttribute('data-lang'))});})();</script><style>
+:root{--bg:#f6f5f1;--card:#fff;--fg:#1b1b1d;--muted:#6a6a70;--line:#e2e1dc;--accent:#2f5bd3;
+--buy:#15803d;--sell:#c0262d;--hold:#b45309;--code:#f1f0ec}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#131315;--card:#1c1c1f;--fg:#ececef;
+--muted:#9a9aa2;--line:#2e2e33;--accent:#7aa2ff;--buy:#4ade80;--sell:#f87171;--hold:#fbbf24;--code:#18181b}}
+:root[data-theme="dark"]{--bg:#131315;--card:#1c1c1f;--fg:#ececef;--muted:#9a9aa2;--line:#2e2e33;--accent:#7aa2ff;
+--buy:#4ade80;--sell:#f87171;--hold:#fbbf24;--code:#18181b}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.7 -apple-system,"Segoe UI","Microsoft YaHei",sans-serif}
+.wrap{max-width:980px;margin:0 auto;padding:28px 16px 80px}
+.top{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px;align-items:baseline;padding-right:110px}
+.top h1{margin:0;font-size:26px}
+.top a{color:var(--accent);font-size:13px;text-decoration:none}
+.muted{color:var(--muted);font-size:13px}
+.hero{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px;margin:18px 0}
+.rating{display:inline-block;font-size:28px;font-weight:700;letter-spacing:.02em}
+.r-buy{color:var(--buy)}.r-sell{color:var(--sell)}.r-hold{color:var(--hold)}
+.score{font-size:15px;color:var(--muted);margin-left:12px}
+.bar{height:8px;background:var(--line);border-radius:4px;overflow:hidden;margin:10px 0 16px;max-width:360px}
+.bar i{display:block;height:100%;background:var(--accent)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.kv{border:1px solid var(--line);border-radius:8px;padding:8px 12px}
+.kv .l{font-size:12px;color:var(--muted)}.kv .v{font-size:18px;font-weight:600;font-variant-numeric:tabular-nums}
+.reason{margin-top:14px;display:grid;gap:6px}
+.reason div{padding:8px 12px;border-radius:8px;border:1px solid var(--line)}
+.scores{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:6px 16px;margin-top:14px;font-size:13px}
+.scores span b{font-variant-numeric:tabular-nums}
+.cat{margin-top:12px;font-size:13px}
+.cat li{margin:2px 0}
+article{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:8px 24px 24px}
+article h1{font-size:22px;margin:22px 0 10px}
+article h2{font-size:19px;margin:28px 0 10px;padding-top:12px;border-top:1px solid var(--line)}
+article h3{font-size:16px;margin:20px 0 8px}
+article table{border-collapse:collapse;width:100%;font-size:14px;font-variant-numeric:tabular-nums}
+article th,article td{border-bottom:1px solid var(--line);padding:6px 10px;text-align:left;vertical-align:top}
+article th{color:var(--muted);font-weight:600;white-space:nowrap}
+.tbl{overflow-x:auto;margin:10px 0}
+article pre{background:var(--code);border:1px solid var(--line);border-radius:6px;padding:12px;overflow-x:auto;font-size:12px}
+article code{background:var(--code);padding:1px 4px;border-radius:4px;font-size:13px}
+article blockquote{margin:10px 0;padding:4px 14px;border-left:3px solid var(--accent);color:var(--muted)}
+article a{color:var(--accent)}
+nav.toc{font-size:13px;margin:10px 0}
+nav.toc a{color:var(--accent);text-decoration:none;margin-right:14px;white-space:nowrap}
+.note{background:var(--card);border:1px dashed var(--line);border-radius:8px;padding:8px 12px;margin:10px 0;font-size:13px;color:var(--muted)}
+</style></head><body><div class='lang-toggle' role='group' aria-label='Language'><button type='button' data-l='zh' onclick="setLang('zh')">中文</button><button type='button' data-l='en' onclick="setLang('en')">EN</button></div><div class='wrap'><div class='top'><h1>ALMS <span lang='zh'>投资分析报告</span><span lang='en'>Investment analysis</span></h1><span class='muted'>20260917 · <span lang='zh'>周期</span><span lang='en'>Horizon</span> position · <a href='../reportdata/ALMS_20260917.html'><span lang='zh'>细节数据报告 →</span><span lang='en'>Detailed data report →</span></a></span></div><section class='hero' lang='zh'><span class='rating r-hold'>持有观望</span><span class='score'>综合评分 42 / 100</span><div class='bar'><i style='width:42.0%'></i></div><div class='grid'><div class='kv'><div class='l'>现价</div><div class='v'>7.78</div></div><div class='kv'><div class='l'>入场区间</div><div class='v'>6.3 – 7.2</div></div><div class='kv'><div class='l'>止损</div><div class='v'>5.4</div></div><div class='kv'><div class='l'>目标 1</div><div class='v'>9.8</div></div><div class='kv'><div class='l'>目标 2</div><div class='v'>12.5</div></div><div class='kv'><div class='l'>建议仓位</div><div class='v'>1.5%</div></div><div class='kv'><div class='l'>置信度</div><div class='v'>中</div></div></div><div class='reason'><div><b>核心理由</b> LUMUS 失败后4周跌69%至约2.1倍净现金, 董事Akkaraju崩盘后以高于现价36%主动买入830万美元且12个月内部人零卖出净买入6000万美元, 但技术与筹码结构未见底</div><div><b>最大风险</b> 主适应症已证伪, 生物标志物亚组需全新Ph3将耗尽现金并触发在手shelf稀释; 98.5%套牢筹码叠加11月中Q3 13F机构清仓抛压, 估值可向净现金3.6美元/股收敛</div></div><div class='scores'><span>宏观 <b>4</b>/10</span><span>事件风险 <b>4</b>/10</span><span>基本面 <b>4</b>/10</span><span>资金筹码 <b>6</b>/10</span><span>技术面 <b>2</b>/10</span><span>期权 <b>4</b>/10</span></div><ul class='cat'><li>2026-09-22 · FOMC 会议纪要</li><li>2026-09-30 · PCE 物价指数 + GDP</li><li>2026-10-02 · 非农就业</li><li>2026-10-16 · 10月期权月度到期 (max pain $10)</li><li>2026-10-28 · FOMC 利率决议</li><li>2026-11-12 · Q3 财报 (EPS 预期 -0.75) 及现金跑道/Ph3 指引</li><li>2026-11-14 · Q3 13F 集中披露, 预期机构清仓抛压</li></ul></section><nav class='toc' lang='zh'><a href='#zh1'>结论摘要</a><a href='#zh2'>第一层：宏观与事件风险</a><a href='#zh3'>第二层：基本面与估值</a><a href='#zh4'>第三层：资金与筹码</a><a href='#zh5'>第四层：技术面</a><a href='#zh6'>第五层：期权市场</a><a href='#zh7'>第六层：综合与交易计划</a></nav><article lang='zh'><h1>ALMS 投资分析报告（2026-09-17）</h1>
+<h2 id='zh1'>结论摘要</h2>
+<div class='tbl'><table>
+<thead>
+<tr>
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>投资意见</td>
+<td><strong>持有观望</strong>（现价不追；只对高风险偏好账户做小仓位试探）</td>
+</tr>
+<tr>
+<td>综合评分</td>
+<td><strong>42 / 100</strong></td>
+</tr>
+<tr>
+<td>置信度</td>
+<td>中</td>
+</tr>
+<tr>
+<td>投资周期</td>
+<td>中线 1–6 个月</td>
+</tr>
+<tr>
+<td>现价</td>
+<td>$7.78（2026-09-17 收盘）</td>
+</tr>
+<tr>
+<td>入场区间</td>
+<td>$6.30–7.20（分 3 批；首批不超过计划仓位 1/3）</td>
+</tr>
+<tr>
+<td>止损</td>
+<td>收盘价 &lt; $5.40（跌破 52 周低 $3.76 上方结构 + 2×ATR 缓冲）</td>
+</tr>
+<tr>
+<td>目标价</td>
+<td>T1 $9.80（POC/筹码峰） / T2 $12.50（12 月 max pain + 缺口下沿）</td>
+</tr>
+<tr>
+<td>建议仓位</td>
+<td>组合的 <strong>0.8%–1.5%</strong>（波动率调整后的&quot;期权化&quot;小仓）</td>
+</tr>
+<tr>
+<td>核心理由</td>
+<td>LUMUS 失败后股价 4 周跌 69%，现价约 2× 净现金；持股 99.5 分位的董事 Akkaraju 在暴跌后以 $10.6–11.2 主动加仓 $8.3M，且 12 个月内内部人零卖出、净买入 $60M</td>
+</tr>
+<tr>
+<td>最大风险</td>
+<td>envudeucitinib 主适应症已证伪，管线价值高度依赖生物标志物亚组&quot;事后分析&quot;，若后续沟通不及预期则 $502M 现金按 -$209M/年烧穿，估值可向净现金 $3.9/股 收敛</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2 id='zh2'>第一层：宏观与事件风险</h2>
+<p><strong>1. 美联储（事实）</strong></p>
+<ul>
+<li>2026-09-16 FOMC 刚结束（昨日），动作为 <strong>加息</strong> 至 3.75%–4.00%，鹰鸽评分 <strong>+6.4（HAWKISH）</strong>，前两次均为 +0.9 中性 HOLD——政策方向出现<strong>鹰派转折</strong>。</li>
+<li>下一次 FOMC：2026-10-28，距今 41 天；2026-09-22（5 天后）发布 FOMC 纪要，是本月次级风险点。</li>
+<li>10Y 收益率 4.95%（20 日 +6.28%），DXY 100.25（20 日 +1.44%）在 MA50/MA200 上方。<strong>利率上行 + 美元走强 = 长久期无盈利生物科技最不利的宏观组合</strong>（推断，机制明确：贴现率上升直接压缩临床期 biotech 的 DCF 现值）。</li>
+<li>结论：宏观对 ALMS 是<strong>明确逆风</strong>，且 FOMC 刚落地意味着不存在&quot;事件前降仓&quot;约束，但也意味着鹰派定价仍在向长久期资产传导。</li>
+</ul>
+<p><strong>2. 宏观日历（未来 2 周，高影响）</strong></p>
+<div class='tbl'><table>
+<thead>
+<tr>
+<th>日期</th>
+<th>事件</th>
+<th>对 ALMS 的传导</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>09-22</td>
+<td>FOMC 纪要</td>
+<td>若确认后续仍有加息，XBI/小盘 biotech 承压</td>
+</tr>
+<tr>
+<td>09-30</td>
+<td>PCE + GDP</td>
+<td>通胀超预期 → 10Y 再上 → 负面</td>
+</tr>
+<tr>
+<td>10-01</td>
+<td>ISM 制造业</td>
+<td>间接（风险偏好）</td>
+</tr>
+<tr>
+<td>10-02</td>
+<td>非农</td>
+<td>强非农 = 更鹰 = 负面；弱非农对 biotech 反而正面</td>
+</tr>
+<tr>
+<td>10-05</td>
+<td>ISM 服务业</td>
+<td>间接</td>
+</tr>
+</tbody>
+</table></div>
+<p>注：CPI/PPI/零售在本窗口内无发布（数据包显示 0 dates）。</p>
+<p><strong>3. 市场环境（事实）</strong></p>
+<ul>
+<li>SPY 762.47，QQQ 716.20，均在 MA50/MA200 上方；VIX 15.53（5 日 -12.95%），&quot;正常&quot;区间，风险偏好并不差。</li>
+<li><strong>IWM 286.21 跌破 MA50，20 日 -4.89%</strong>——小盘明显跑输大盘。ALMS beta 1.73、市值 $1.0B，属小盘生物科技，<strong>大盘的&quot;好&quot;不代表它的&quot;好&quot;</strong>，IWM 的弱势更具参考性。</li>
+<li>ALMS 3 个月相对 SPY <strong>-67.3%</strong>，极端跑输。</li>
+</ul>
+<p><strong>4. 公司事件（事实 — 这是本案的全部）</strong></p>
+<ul>
+<li><strong>2026-09-01（8-K Item 8.01）：LUMUS Phase 2b 狼疮试验在总体人群未达主要终点</strong>。当日 -56.58%，成交量 22.76× 50 日均量，为上市以来最差单日。</li>
+<li>2026-09-09 新闻：公司宣布仍将<strong>基于生物标志物亚组推进 envudeucitinib</strong>（推断：即总体人群失败、依赖 post-hoc 亚组，监管与商业不确定性大幅上升）。</li>
+<li>分析师反应（分裂，事实）：Guggenheim 下调 Buy→Neutral；Oppenheimer 维持 Outperform、目标 $55→$37 并称&quot;跌幅可能过度&quot;；Wells Fargo $51→$25；Morgan Stanley $39→$29；HC Wainwright <strong>上调</strong> Neutral→Buy 但目标 $25→$15。8 家分析师均值目标 $32.13（低 $15 / 高 $46），recommendationKey = strong_buy。
+<ul>
+<li><strong>重要警告</strong>：均值目标 $32 相对现价 +313%，这是<strong>目标价严重滞后/未充分更新</strong>的典型表现，不可作为估值锚。即使取最保守的 HC Wainwright $15，也隐含 +93%。</li>
+</ul>
+</li>
+<li><strong>下次财报：2026-11-12（距今 56 天）</strong>，落在持有周期内，EPS 一致预期 -$0.75。</li>
+<li>红旗筛查：<strong>无</strong>（无 NT 10-K、无退市通知）。</li>
+<li>稀释：<strong>2 份有效 shelf（2026-03-19 S-3ASR + 2025-07-03 S-3）</strong>。烧钱 -$209M/年、股价在 $7.78，<strong>ATM/增发风险是本案第二大风险</strong>（推断：管理层在数据失败后通常不愿在低位增发，但现金 2.4 年跑道给了拖延空间，这降低了 6 个月内被迫增发的概率）。</li>
+</ul>
+<p><strong>财报二元风险判断</strong>：11-12 的 Q3 财报本身不是主要风险源（临床期公司季报仅是烧钱确认），<strong>真正的二元事件是 LUMUS 生物标志物亚组完整数据的学术会议/投资者日披露及与 FDA 的沟通结果</strong>（时间未披露 = 数据缺失）。建议：<strong>可持仓过 11-12 财报，但必须在此前将仓位控制在计划上限内，不加仓</strong>。</p>
+<hr />
+<h2 id='zh3'>第二层：基本面与估值</h2>
+<p><strong>5. 经营（事实，10-Q XBRL）</strong></p>
+<div class='tbl'><table>
+<thead>
+<tr>
+<th>期间</th>
+<th>营收($M)</th>
+<th>净利($M)</th>
+<th>EPS</th>
+<th>YoY 营收</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2026-06-30</td>
+<td>2</td>
+<td>-142</td>
+<td>-1.11</td>
+<td>-37.7%</td>
+</tr>
+<tr>
+<td>2026-03-31</td>
+<td>2</td>
+<td>-93</td>
+<td>-0.74</td>
+<td>-90.0%</td>
+</tr>
+<tr>
+<td>2025-12-31(10-K)</td>
+<td>24</td>
+<td>-243</td>
+<td>-2.86</td>
+<td>—</td>
+</tr>
+<tr>
+<td>2025-09-30</td>
+<td>2</td>
+<td>-111</td>
+<td>-1.06</td>
+<td>—</td>
+</tr>
+</tbody>
+</table></div>
+<ul>
+<li>营收为合作/里程碑性质，不具经营意义（$7.4M TTM）。<strong>这是一家纯临床期公司，损益表不构成投资依据</strong>。</li>
+<li>EPS 超预期记录混乱：近 4 季 +74.2%、+3.9%、-11.3%、-15.7%——对无收入 biotech 无信号价值。</li>
+</ul>
+<p><strong>6. 估值</strong></p>
+<ul>
+<li>PE / Forward PE / EV-EBITDA <strong>均无意义</strong>（EPS -4.11，EBITDA 负）；PE 历史分位<strong>数据缺失</strong>（无正 EPS 期间）。</li>
+<li>PS 136×——同样无意义。</li>
+<li><strong>唯一有效的估值锚是现金与管线</strong>：
+<ul>
+<li>市值 $1.007B；现金及等价物 $502.3M（yfinance），总债务 $36.4M → <strong>净现金约 $466M ≈ $3.60/股</strong>（按约 129M 股）。</li>
+<li>注：10-Q 口径 &quot;Cash &amp; Equiv $64M&quot; 与 yfinance $502M 差异来自短期投资/有价证券分类，总资产 $561M 可交叉验证 $502M 口径更接近真实流动性。</li>
+<li><strong>现价 $7.78 = 约 2.1× 净现金</strong>，即市场给整条管线（envudeucitinib + ESK-001 系列 + 早期）的定价约 <strong>$540M</strong>。</li>
+</ul>
+</li>
+<li>自由现金流 -$208.6M/年 → <strong>现金跑道约 2.2–2.4 年</strong>（至 2028 年底前后），无迫在眉睫的融资悬崖。</li>
+</ul>
+<p><strong>7. 判断（推断）</strong>：</p>
+<ul>
+<li>看多方：$540M 的管线定价对一家还有多个适应症、且亚组有信号的 TYK2/JAK 平台公司，<strong>已经不是乐观定价</strong>。</li>
+<li>看空方：LUMUS 总体人群失败意味着<strong>最大适应症（狼疮）的概率权重从&quot;可能&quot;降到&quot;需要重新验证&quot;</strong>，且生物标志物亚组策略几乎必然需要一个全新的、昂贵的 Phase 3——这会消耗掉现有全部现金并触发稀释。</li>
+<li><strong>净结论：基本面评分 4/10</strong>。不是价值陷阱，但也谈不上&quot;便宜&quot;——只是&quot;不贵到荒谬&quot;。</li>
+</ul>
+<hr />
+<h2 id='zh4'>第三层：资金与筹码</h2>
+<p><strong>8/9c. 内部人（这是本案最强的看多证据）</strong></p>
+<p><strong>事实（Form 4，insider_trace）</strong>：</p>
+<ul>
+<li>过去 365 天：<strong>买入 16 笔 / $50.95M，卖出 0 笔</strong>，6 名不同买家（数据包 <code>insider_summary_365d</code>）。扩展至 60 份申报：买入 40 笔 $61.7M，卖出+代扣税 9 笔 $1.55M，<strong>净买入 $60.1M</strong>，<strong>10b5-1 计划性交易占比 0%（全部为主动公开市场交易）</strong>。</li>
+<li><strong>关键时点</strong>：2026-09-04 与 2026-09-08，即 LUMUS 崩盘后第 3、5 个交易日，<strong>董事 AKKARAJU SRINIVAS 主动买入</strong>：09-04 约 $2.46M @ $11.17（×2 笔结构），09-08 约 $5.81M @ $10.63（两笔 273,291 + 273,290 股），同时有两笔 48,066/48,065 股 @ $10.55 的 Sale(D)（推断为关联实体间的账户结构调整，净仍为大额买入）。<strong>该批次合计净买入约 $8.3M。</strong></li>
+<li>Akkaraju 历史胜率分位 <strong>99.5</strong>（n=16，胜率 62.5%，63 日平均超额 <strong>+50.7%</strong>，医药生物 15 笔胜 67%、超额 +56.5%）——<strong>专长行业正好覆盖本股</strong>。</li>
+<li>Tananbaum / Foresite 系（skill 94.9，医药生物超额 +54.1%）在 2025-11 至 2026-01 于 $5.98–$17.00 区间买入合计约 $10.6M/实体。</li>
+<li>卖方仅有 2026-08-05 的 6 名高管小额卖出（合计 &lt;$0.6M，推断为归属代扣/例行）+ 1 份 Form 144（Pangali，5,000 股 / $140K，微不足道）。</li>
+</ul>
+<p><strong>9d. 可信度校验（必须执行 — 这一步显著削弱上述信号）</strong></p>
+<p>引用 <code>skill_persistence</code>：</p>
+<div class='tbl'><table>
+<thead>
+<tr>
+<th>模块</th>
+<th>cross_section_ols beta</th>
+<th>t</th>
+<th>结论</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>13F</td>
+<td><strong>-0.0497</strong></td>
+<td><strong>-2.23</strong></td>
+<td>显著为<strong>负</strong>——&quot;跟随高胜率机构&quot;样本外<strong>反向</strong>。top-bottom 超额 -0.60%。<strong>13F 的 skill_pct 不得作为买入理由。</strong></td>
+</tr>
+<tr>
+<td>内部人</td>
+<td>+0.0764</td>
+<td><strong>+0.58</strong></td>
+<td>未通过显著性（|t|&lt;2）。top-bottom +5.75% 方向为正但<strong>未被验证</strong>。</td>
+</tr>
+<tr>
+<td>议员</td>
+<td>-0.0250</td>
+<td>-0.22</td>
+<td>不显著。</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>这意味着：Akkaraju 的 &quot;99.5 分位&quot; 标签本身没有统计学效力，不能因为他&quot;历史准&quot;就买。</strong> 必须退回到 <code>signal_factors</code> 的显著特征：</p>
+<p>内部人事件回归（n=16,986，按月聚类）显著项：</p>
+<ul>
+<li><strong>CFO 买入：b=+0.0301, t=+2.58（显著正）</strong> → 本案<strong>无</strong> CFO 买入，不适用。</li>
+<li><strong>低价股(&lt;$5)：b=+0.0481, t=+2.56（显著正）</strong> → 本案买入价 $10.6–17.0，<strong>不适用</strong>（现价 $7.78 仍 &gt;$5）。</li>
+<li><strong>CEO 买入：b=-0.0218, t=-2.63（显著负）</strong> → 本案无 CEO 买入，中性。</li>
+<li>仅 10% 大股东：b=-0.0098, t=-0.90（不显著，但方向为负）→ <strong>Foresite/Tananbaum 属此类，信号被打折</strong>。</li>
+<li>集群买入(30 天内≥3 人)：b=-0.0102, t=-1.58（不显著，方向为负）→ 2025-W46 的 4 人集群买入<strong>不是加分项</strong>。</li>
+<li>log(金额)：t=-0.87，<strong>金额大小无信号</strong>——$8.3M 的绝对规模并不额外加分。</li>
+</ul>
+<blockquote>
+<p><strong>诚实结论（这是本报告最重要的一段）</strong>：内部人买入在本样本中<strong>没有一条显著特征命中</strong>。Akkaraju 的买入是<strong>定性上有说服力的</strong>（Director、非 10b5-1、暴跌后主动、行业专长匹配、连续 10 个月只买不卖、自有资金近 $2,900 万），但<strong>量化上未被验证</strong>。因此它可以作为&quot;下行有限&quot;的<strong>支持性证据</strong>，<strong>不能作为买入的主要理由</strong>。</p>
+</blockquote>
+<p><strong>9. 13F 机构（2026-06-30，滞后 79 天，且期间股价从 ~$28 跌至 $7.78）</strong></p>
+<div class='tbl'><table>
+<thead>
+<tr>
+<th>指标</th>
+<th>数值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>持有机构数</td>
+<td>198（前季 195，+3）</td>
+</tr>
+<tr>
+<td>新建仓 / 加仓 / 减仓 / 清仓</td>
+<td>30 / 60 / 48 / 27</td>
+</tr>
+<tr>
+<td>机构总持股</td>
+<td>118.12M（前季 114.82M），<strong>净 +2.87%</strong></td>
+</tr>
+<tr>
+<td>机构持股占比</td>
+<td><strong>93.53%</strong>（极高，筹码高度机构化）</td>
+</tr>
+<tr>
+<td>高胜率(top20%)机构</td>
+<td>买 7 / 卖 3 / 持平 13</td>
+</tr>
+</tbody>
+</table></div>
+<ul>
+<li>大买家：FMR +5.80M 股（+595%，并于 08-06 申报 13G 持 5.5%）、T. Rowe +1.91M（+58%）、Jupiter Topco 新建 2.36M、BlackRock +1.05M、Novo Holdings 新建 1.10M。</li>
+<li>大卖家：Janus Henderson 清仓 -2.12M、UBS -2.10M、Point72 清仓、Citadel 清仓、Cormorant -0.66M。</li>
+<li><strong>行业专长 + 高胜率的动作分裂</strong>：Verdad Advisers（skill 83.9，医药生物 45 笔胜 71%、超额 +13.1%，且是本股行业专家榜第 4 名）<strong>加仓 +32.9%</strong>；而 Farallon（skill 92.3，医药生物 40 笔胜 62%、超额 +10.9%）<strong>清仓</strong>。<strong>正反抵消。</strong></li>
+<li><strong>致命时效问题</strong>：所有这些动作都发生在 <strong>$28 附近的成本区</strong>，而 LUMUS 数据是 9 月 1 日的事。<strong>Q2 13F 对当前完全无择时价值</strong>，只说明一件事——<strong>筹码极度拥挤于高位，Q3 13F（11 月 14 日前后披露）大概率显示大规模清仓，届时存在第二轮机构抛压</strong>。这是实质性的看空因素。</li>
+<li>本地缓存 <code>universe_13f_alpha</code>（2026-02-19 扫描，alpha 62.5，&quot;Structural Accumulation / HIGH confidence&quot;）——其自述的 breaks 条件为&quot;基本面恶化使耐心论点失效&quot;，<strong>该条件已于 2026-09-01 触发，此缓存结论应视为已作废</strong>。</li>
+</ul>
+<p><strong>9b. 国会议员</strong>：<code>congress_trades</code> 为<strong>空</strong>——无议员交易 ALMS。高胜率议员近 90 天医药相关动作零散（Salazar 买 MRK、买卖 MRNA 混合），无主题性方向。且议员模块 OLS t=-0.22 不显著，<strong>整体忽略</strong>。</p>
+<p><strong>10. 筹码分布（决定性的看空结构）</strong></p>
+<ul>
+<li>平均成本 <strong>$15.67</strong>，中位 $10.74，持有人平均浮亏 <strong>-50.4%</strong>。</li>
+<li><strong>获利盘仅 1.5%，套牢盘 98.5%（其中深度套牢 &gt;20% 者 79.2%）</strong>。</li>
+<li>70% 成本区间 $9.14–$26.12（宽度 186%，<strong>极度分散</strong>）。</li>
+<li>筹码峰（全部在上方 = 全部是阻力）：$8.05(+3.5%)、$8.62(+10.8%)、$9.31(+19.6%)、$10.22(+31.4%)，以及远端的 $25.09 / $26.29。</li>
+<li><strong>解读</strong>：&lt;10% 获利盘理论上是见底特征，但必须&quot;缩量&quot;配合。当前最近 5 日均量/50 日均量 = <strong>1.54（仍在放量）</strong>，<strong>尚未满足见底条件</strong>。同时 $8.05–$10.22 的密集筹码带意味着<strong>任何反弹到 $8–10.2 都会遭遇解套盘抛压</strong>——这直接限定了 T1 的上限。</li>
+</ul>
+<p><strong>11. 空头</strong></p>
+<ul>
+<li>short % of float <strong>7.27%</strong>，days to cover <strong>6.42</strong>。中等偏高，但<strong>不构成逼空条件</strong>（逼空通常需 &gt;15% + DTC&gt;5 + 正向催化剂）。在缺乏正面催化的情况下，7.27% 的空头更可能是<strong>持续压制</strong>而非燃料。</li>
+</ul>
+<hr />
+<h2 id='zh5'>第四层：技术面</h2>
+<p><strong>12. 均线（全面空头）</strong></p>
+<ul>
+<li>收盘 $7.78 vs MA5 $8.50(-8.5%) / MA10 $9.53(-18.4%) / MA20 $15.01(<strong>-48.2%</strong>) / MA50 $22.36(<strong>-65.2%</strong>) / MA200 $22.28(<strong>-65.1%</strong>)。</li>
+<li>ma_cluster：短期发散 83.68%，5-50 发散 178.15%，判定&quot;<strong>均线发散</strong>&quot;，排列&quot;交织&quot;（实为断崖式下移中的过渡态）。</li>
+<li>2025-11-19 的金叉已完全失效，MA50 将在数周内下穿 MA200（死叉在途）。</li>
+<li><strong>没有任何均线支撑，价格处于真空区</strong>。</li>
+</ul>
+<p><strong>13. 量价</strong></p>
+<ul>
+<li>20 日 up/down volume ratio <strong>0.48</strong>（下跌日成交量是上涨日的 2 倍以上）→ 派发主导。</li>
+<li>OBV 20 日<strong>下降</strong>，价格 20 日<strong>下降</strong>，&quot;量价同向&quot;——即<strong>健康的下跌</strong>（无背离，无底部信号）。</li>
+<li>最新量 1.96M vs 20 日均量 4.36M（0.45×）→ 恐慌高潮后的量能衰竭；但 avg5/avg50 = 1.54 仍处高位，<strong>换手尚未结束</strong>。</li>
+</ul>
+<p><strong>14. 巨量日（60 日内）</strong></p>
+<div class='tbl'><table>
+<thead>
+<tr>
+<th>日期</th>
+<th>量/均量</th>
+<th>涨跌</th>
+<th>收盘</th>
+<th>K线</th>
+<th>收盘位置</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2026-06-26</td>
+<td>5.39×</td>
+<td>+5.47%</td>
+<td>$26.40</td>
+<td>阳</td>
+<td>0.94（高位）→ 已彻底失效</td>
+</tr>
+<tr>
+<td><strong>2026-09-01</strong></td>
+<td><strong>22.76×</strong></td>
+<td><strong>-56.58%</strong></td>
+<td>$9.47</td>
+<td><strong>阴</strong></td>
+<td>0.31 → <strong>典型派发/崩盘日，$9.47 成为强阻力</strong></td>
+</tr>
+<tr>
+<td>2026-09-02</td>
+<td>5.81×</td>
+<td>+9.29%</td>
+<td>$10.35</td>
+<td>阳</td>
+<td>0.49 → 抄底盘，<strong>已全部被套</strong></td>
+</tr>
+<tr>
+<td>2026-09-03</td>
+<td>3.83×</td>
+<td>+9.76%</td>
+<td>$11.36</td>
+<td>阳</td>
+<td>0.65 → 同上</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>关键推断</strong>：09-02/09-03 的放量反弹抄底盘（成交约 5.8×/3.8× 均量）在 $10.35–11.36 全部被套，<strong>这解释了此后连续 2 周的阴跌</strong>——抄底盘正在投降。<strong>这一投降过程尚未完成</strong>，是不宜此刻建仓的最直接技术理由。</p>
+<p><strong>15. 成交量分布（6 个月）</strong></p>
+<ul>
+<li><strong>POC = $9.82</strong>，价值区 $9.82–$28.11。注意 <strong>VAL = POC = $9.82</strong>，即现价 $7.78 已<strong>跌破整个价值区下沿</strong>，处于低成交量真空带 → 下方无支撑，但一旦反转回到 $9.82 会很快（真空带双向都快）。</li>
+<li>高成交量节点：$9.82 / $24.57 / $21.62 / $10.41 / $25.75。</li>
+<li>20 日 VWAP <strong>$10.85</strong> —— 近一个月所有买家平均成本，是中期阻力。</li>
+<li><strong>与筹码峰交叉验证</strong>：$9.82（POC）≈ $9.31/$10.22（筹码峰）→ <strong>$9.3–10.4 是极强阻力带，构成 T1 的天花板</strong>。</li>
+</ul>
+<p><strong>16. 动量 / 波动</strong></p>
+<ul>
+<li><strong>RSI14 = 19.42</strong>，深度超卖（&lt;30）。但注意：崩盘型下跌中 RSI 可长期驻留 15–25，<strong>超卖 ≠ 买入信号</strong>；未见 RSI 底背离（价格新低、RSI 亦新低）。</li>
+<li>MACD -4.467 / signal -4.047 / <strong>hist -0.42</strong>，但 hist_prev5 = -1.133 → <strong>柱体正在收敛（-1.13 → -0.42）</strong>，这是本股<strong>唯一的技术面正向迹象</strong>：下跌动能在减弱。</li>
+<li>布林带宽 183.38%，<strong>1 年分位 99.6%</strong> —— 极端扩张。带宽在此位置通常意味着<strong>波动率已见顶</strong>，后续是&quot;收口&quot;而非继续扩张（推断：即最剧烈的下跌段大概率已过，但收口可以通过横盘完成，不必然是反弹）。</li>
+<li>ATR14 = $1.77（<strong>22.74%</strong>），HV20 = <strong>302%</strong>。这是极端波动资产，<strong>任何仓位必须按波动率缩放</strong>。</li>
+<li>区间回报：1W -21.4% / 1M -68.7% / 3M -66.3% / 6M -69.4% / <strong>1Y +87.0%</strong>（1 年正收益说明起点极低，$3.76 是 52 周低）。</li>
+<li>距 52 周高 <strong>-75.2%</strong>；52 周低 $3.76 是下方唯一的历史结构位。</li>
+</ul>
+<hr />
+<h2 id='zh6'>第五层：期权市场</h2>
+<p><strong>17. Max Pain</strong></p>
+<div class='tbl'><table>
+<thead>
+<tr>
+<th>到期</th>
+<th>DTE</th>
+<th>Max Pain</th>
+<th>vs 现价</th>
+<th>解读</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>09-18</td>
+<td>1</td>
+<td>$25.00</td>
+<td><strong>+221%</strong></td>
+<td>完全失效——OI 是崩盘前留存的僵尸持仓，<strong>无参考价值</strong></td>
+</tr>
+<tr>
+<td>10-16（月度）</td>
+<td>29</td>
+<td><strong>$10.00</strong></td>
+<td><strong>+28.5%</strong></td>
+<td>月度 OPEX，有一定磁吸参考</td>
+</tr>
+<tr>
+<td>12-18</td>
+<td>92</td>
+<td>$12.00</td>
+<td>+54.2%</td>
+<td>同为僵尸 OI 主导</td>
+</tr>
+<tr>
+<td>2027-01-15</td>
+<td>120</td>
+<td><strong>$7.00</strong></td>
+<td><strong>-10.0%</strong></td>
+<td><strong>LEAP 级、OI 最新鲜（call OI 23,511），最接近现价</strong></td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>推断</strong>：$7.00（Jan-27 max pain）与 $10.00（Oct max pain）构成一个 <strong>$7–$10 的磁吸区间</strong>，与筹码/POC 分析高度一致。这是本报告三个独立方法（筹码峰、成交量分布、期权 max pain）交叉验证出的<strong>同一区间</strong>，可信度较高。</p>
+<p><strong>18. OI 墙</strong></p>
+<ul>
+<li><strong>上方（阻力）</strong>：Oct-16 call $25（6,017）—— 僵尸；有效的是 Oct $10（1,062）与 <strong>Jan-27 $7（10,128）/ $20（10,127）</strong>。Dec-18 call $15（4,773）。</li>
+<li><strong>下方（支撑）</strong>：<strong>Oct-16 put $8（2,544）与 $10（2,215）</strong> —— <strong>$8 put 墙是最近、最有效的地板参考</strong>，现价 $7.78 刚刚跌破它，做市商在 $8 附近有对冲性买盘。Jan-27 put $7（3,001）。</li>
+<li><strong>有效区间：地板 $7.0–8.0，天花板 $10.0–10.5</strong>。</li>
+</ul>
+<p><strong>19. Put/Call</strong></p>
+<ul>
+<li>总量 PCR <strong>0.75</strong>，总 OI PCR <strong>0.32</strong>。</li>
+<li><strong>Oct-16 成交量 PCR = 1.81（唯一显著偏空的近月）</strong>，OI PCR 0.58 —— 说明<strong>近期新增交易以买 put / 对冲为主</strong>，仍在恐慌/防御模式。</li>
+<li>Jan-27 成交量 PCR <strong>0.07</strong>（499 call vs 35 put）—— <strong>极端偏多的投机性远期 call 买盘</strong>，这是&quot;彩票式抄底&quot;的典型痕迹，按反向指标读<strong>偏警惕</strong>（&lt;0.5 为过度乐观）。</li>
+<li><strong>结论：近月恐慌 + 远月彩票</strong>，这是崩盘后 4 周的标准持仓结构，无方向性信号。</li>
+</ul>
+<p><strong>20. IV</strong></p>
+<ul>
+<li>ATM IV：Oct 70.1% / Dec 107.3% / Jan-27 94.1%；<strong>HV20 = 302%</strong>。</li>
+<li><strong>IV &lt;&lt; HV，即 IV 相对已实现波动是折价的</strong>（罕见，因为 HV20 被 -56.6% 那一天严重抬高）。正确读法：市场认为<strong>一次性事件已过，未来波动将远低于过去 20 日</strong>。
+<ul>
+<li>含义：<strong>不适合卖期权</strong>（IV 名义上不高，且 70% 的 IV 在 22.7% ATR 的股票上并不算溢价）；<strong>买期权也不便宜</strong>。</li>
+</ul>
+</li>
+<li>Implied move：Oct-16（29 天）<strong>±18.9%</strong>；Jan-27（120 天）<strong>±30.7%</strong>。即市场定价 1 月中旬前 68% 概率落在 <strong>$5.39–$10.17</strong>——与本报告的入场/目标区间自洽。</li>
+<li>Skew：put90 − call110 全部为<strong>大幅负值</strong>（-30 至 -98 pts）。这<strong>不是</strong> put 偏斜陡峭，而是<strong>深度虚值 call 的 IV 远高于 put</strong>（反向 skew），典型的&quot;崩盘后彩票 call 需求 + put 已无人买（因为最坏已发生）&quot;。<strong>这在 biotech 中通常不是看多信号，而是散户投机拥挤的标志</strong>。</li>
+</ul>
+<p><strong>21. GEX</strong></p>
+<ul>
+<li>净 GEX <strong>+$31,467/1%</strong>，判定&quot;<strong>正 Gamma（做市商抑制波动）</strong>&quot;。</li>
+<li>但逐期限看：<strong>Oct-16 GEX = -$52,719（负 Gamma，最近月、最活跃）</strong>，Jan-27 +$69,831、Dec +$18,983（远月正 Gamma 来自僵尸 call OI）。</li>
+<li><strong>修正判断：净正 Gamma 是被远月僵尸持仓污染的读数。真正驱动未来 1 个月盘面的 Oct-16 是负 Gamma，意味着近月波动会被放大，急涨急跌仍会出现。</strong> 不能据&quot;正 Gamma&quot;推断区间震荡。</li>
+</ul>
+<p><strong>22. 异动期权</strong>：<code>unusual_activity</code> 为<strong>空</strong>——近期无大额权利金、无 vol/OI&gt;2 的新开仓。<strong>没有知情交易痕迹</strong>，这既不支持看多也不支持看空，但说明<strong>机构未在期权市场表达方向性观点</strong>。</p>
+<hr />
+<h2 id='zh7'>第六层：综合与交易计划</h2>
+<h3 id='zh8'>23. 多空证据表</h3>
+<p><strong>看多（5 条）</strong></p>
+<div class='tbl'><table>
+<thead>
+<tr>
+<th>#</th>
+<th>证据</th>
+<th>权重</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>董事 Akkaraju（医药专长、非 10b5-1）在崩盘后 3–5 个交易日主动买入 $8.3M @ $10.6–11.2，12 个月内内部人<strong>净买入 $60M、零主动卖出</strong></td>
+<td><strong>高</strong>（定性），但量化未验证（见 9d）</td>
+</tr>
+<tr>
+<td>2</td>
+<td>现价 $7.78 ≈ <strong>2.1× 净现金</strong>（净现金 $466M ≈ $3.60/股），现金跑道 2.2–2.4 年，无近期融资悬崖，无红旗申报</td>
+<td>高</td>
+</tr>
+<tr>
+<td>3</td>
+<td>RSI 19.4 极度超卖 + MACD 柱由 -1.13 收敛至 -0.42 + 布林带宽 99.6 分位（波动率见顶）→ <strong>最剧烈下跌段大概率已过</strong></td>
+<td>中</td>
+</tr>
+<tr>
+<td>4</td>
+<td>筹码、成交量分布、期权 max pain <strong>三方独立交叉验证</strong>出 $7–$10 磁吸区，下方 Oct put 墙 $8 + Jan-27 max pain $7 形成地板</td>
+<td>中</td>
+</tr>
+<tr>
+<td>5</td>
+<td>卖方未全面投降：Oppenheimer 维持 Outperform（$37）、HC Wainwright <strong>逆势上调至 Buy</strong>、MS/WFC 维持 Overweight；8 家均值目标 $32</td>
+<td><strong>低</strong>（目标价明显滞后，不可作为估值锚）</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>看空（5 条）</strong></p>
+<div class='tbl'><table>
+<thead>
+<tr>
+<th>#</th>
+<th>证据</th>
+<th>权重</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><strong>LUMUS Ph2b 总体人群失败</strong>，核心适应症证伪；生物标志物亚组属事后分析，需全新 Ph3，将吞噬全部现金并触发稀释；<strong>2 份有效 shelf 在手</strong></td>
+<td><strong>高</strong></td>
+</tr>
+<tr>
+<td>2</td>
+<td>筹码 <strong>98.5% 套牢、79.2% 深度套牢</strong>，$8.05/$8.62/$9.31/$10.22 四重筹码峰构成密集解套抛压；平均成本 $15.67</td>
+<td><strong>高</strong></td>
+</tr>
+<tr>
+<td>3</td>
+<td><strong>Q2 13F 显示机构持股 93.5%、198 家、净增 2.87%，成本集中在 $28 附近 → Q3 13F（11 月中）几乎必然显示大规模清仓，第二轮机构抛压在途</strong></td>
+<td><strong>高</strong></td>
+</tr>
+<tr>
+<td>4</td>
+<td>技术面无任何支撑：价格低于 MA200 达 -65%，跌破价值区下沿 $9.82 进入真空带，up/down vol ratio 0.48，OBV 下降，09-02/03 抄底盘仍在投降（avg5/avg50=1.54 未缩量）</td>
+<td><strong>高</strong></td>
+</tr>
+<tr>
+<td>5</td>
+<td>宏观逆风叠加：FOMC 转鹰（+6.4，已加息）、10Y 4.95% 上行、DXY 走强、IWM 破 MA50 —— 长久期无盈利 biotech 最差组合；beta 1.73 放大</td>
+<td>中</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id='zh8'>24. 评分卡（中线周期，标准权重）</h3>
+<div class='tbl'><table>
+<thead>
+<tr>
+<th>维度</th>
+<th>权重</th>
+<th>得分</th>
+<th>加权</th>
+<th>依据</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>宏观/市场环境</td>
+<td>15%</td>
+<td><strong>4/10</strong></td>
+<td>0.60</td>
+<td>SPY/QQQ 健康，但 FOMC 转鹰 + 10Y 4.95% + IWM 破 MA50，小盘 biotech 逆风</td>
+</tr>
+<tr>
+<td>事件风险（反向）</td>
+<td>10%</td>
+<td><strong>4/10</strong></td>
+<td>0.40</td>
+<td>无红旗、FOMC 已过、财报尚远；但 shelf 稀释风险 + 亚组数据/FDA 沟通为未定时的二元事件</td>
+</tr>
+<tr>
+<td>基本面/估值</td>
+<td>25%</td>
+<td><strong>4/10</strong></td>
+<td>1.00</td>
+<td>2.1× 净现金不算贵，2.4 年跑道；但主适应症证伪、PE/PS 全失效、无正现金流</td>
+</tr>
+<tr>
+<td>资金与筹码</td>
+<td>20%</td>
+<td><strong>6/10</strong></td>
+<td>1.20</td>
+<td>内部人净买 $60M 且崩盘后加仓（强）；但 98.5% 套牢 + Q3 13F 清仓在途（强负）；skill 信号经 OLS 校验后不可主用</td>
+</tr>
+<tr>
+<td>技术面</td>
+<td>20%</td>
+<td><strong>2/10</strong></td>
+<td>0.40</td>
+<td>全面空头排列，跌破价值区，量价同向下跌，唯一亮点是 MACD 柱收敛</td>
+</tr>
+<tr>
+<td>期权结构</td>
+<td>10%</td>
+<td><strong>4/10</strong></td>
+<td>0.40</td>
+<td>$7–8 put 墙 + Jan max pain $7 提供地板；但近月负 Gamma、Oct PCR 1.81 防御、远月 call 投机拥挤、无知情异动</td>
+</tr>
+<tr>
+<td><strong>合计</strong></td>
+<td>100%</td>
+<td></td>
+<td><strong>4.00 → 40/100</strong></td>
+<td></td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>微调 +2 分</strong>：内部人在<strong>已知坏消息之后</strong>以高于现价 36% 的价格投入 $8.3M 自有资金，这是数据包中唯一带&quot;信息优势 + 真金白银&quot;的证据，值得在纯机械评分外给予小幅加分。</p>
+<p><strong>最终综合评分：42 / 100。</strong></p>
+<h3 id='zh8'>25. 投资意见</h3>
+<h1>持有观望（Hold / 不追高，允许小仓位分批试探）</h1>
+<p><strong>置信度：中</strong></p>
+<p>理由综述：这是一个**典型的&quot;下行有限、上行不明&quot;**的落刀标的。$3.60/股 的净现金 + 董事真金白银的 $8.3M 崩盘后买入，为 $6 以下提供了合理的价值地板；但 98.5% 的套牢筹码、$8–10.4 的四重阻力带、尚未完成的抄底盘投降、以及 <strong>11 月中旬 Q3 13F 披露带来的第二轮机构抛压</strong>，使得未来 4–8 周风险收益并不占优。<strong>中线（1–6 个月）的正确做法是等待缩量筑底，而非现在满仓抄底。</strong></p>
+<ul>
+<li>若已持有：<strong>减至观察仓（≤1%），不加仓</strong>，在 $9.3–10.4 反弹时减持剩余部分。</li>
+<li>若未持有：<strong>不建议现价追入</strong>；按下方计划分批、限额建立试探仓。</li>
+</ul>
+<h3 id='zh8'>26. 交易计划</h3>
+<p><strong>入场（分 3 批，总计划仓位 1.5%）</strong></p>
+<div class='tbl'><table>
+<thead>
+<tr>
+<th>批次</th>
+<th>触发</th>
+<th>价位</th>
+<th>占计划仓位</th>
+<th>依据</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>现价附近观察仓</td>
+<td><strong>$7.00–7.20</strong></td>
+<td>33%</td>
+<td>Jan-27 max pain $7 + Jan put 墙 $7（3,001 OI）</td>
+</tr>
+<tr>
+<td>2</td>
+<td>缩量确认</td>
+<td><strong>$6.30–6.80</strong> 且 5 日均量 &lt; 50 日均量（即 avg5/avg50 &lt; 1.0）</td>
+<td>33%</td>
+<td>抄底盘投降完成的量能确认，<strong>这是关键前置条件</strong></td>
+</tr>
+<tr>
+<td>3</td>
+<td>突破确认（二选一，不同时）</td>
+<td>放量收复 <strong>$9.82</strong>（POC）且量 &gt;1.5× 均量</td>
+<td>34%</td>
+<td>收复价值区下沿 = 结构反转</td>
+</tr>
+</tbody>
+</table></div>
+<blockquote>
+<p><strong>纪律要求</strong>：第 2 批的&quot;缩量&quot;条件<strong>必须满足</strong>才可执行。当前 avg5/avg50 = 1.54，条件<strong>未满足</strong>。若价格跌至 $6.3–6.8 但仍在放量，<strong>跳过此批</strong>。</p>
+</blockquote>
+<p><strong>止损</strong></p>
+<ul>
+<li>结构止损：<strong>收盘价 &lt; $5.40</strong>（52 周低 $3.76 与现价之间的中枢，且为第 2 批入场下方约 2×ATR 缓冲；ATR14 = $1.77）。</li>
+<li>事件止损（<strong>优先于价格</strong>）：宣布 ATM/增发定价、或亚组数据/FDA 沟通结果负面 → <strong>立即无条件清仓</strong>，不等价格。</li>
+<li>单笔风险：按 1.5% 仓位、均价 ~$6.80、止损 $5.40 计 → 组合层面风险约 <strong>-0.31%</strong>。可接受。</li>
+</ul>
+<p><strong>目标位</strong></p>
+<div class='tbl'><table>
+<thead>
+<tr>
+<th>目标</th>
+<th>价位</th>
+<th>依据</th>
+<th>自均价 $6.80 的回报</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>T1</strong></td>
+<td><strong>$9.80</strong></td>
+<td>POC $9.82 = VAL = 筹码峰 $9.31/$10.22 = Oct max pain $10 附近，<strong>四重共振阻力</strong></td>
+<td><strong>+44%</strong></td>
+</tr>
+<tr>
+<td><strong>T2</strong></td>
+<td><strong>$12.50</strong></td>
+<td>Dec-18 max pain $12 + 09-01 崩盘缺口下沿区、20 日 VWAP $10.85 上方</td>
+<td><strong>+84%</strong></td>
+</tr>
+</tbody>
+</table></div>
+<ul>
+<li><strong>风险收益比</strong>：至 T1 = 44% / 20.6% ≈ <strong>2.1 : 1</strong>；至 T2 ≈ <strong>4.1 : 1</strong>。比率合格，但<strong>达成概率低</strong>，这正是评分只有 42 的原因。</li>
+<li>T1 处<strong>必须减持至少 50%</strong>——$9.3–10.4 的解套抛压是本案最确定的技术事实。</li>
+<li>分析师均值目标 $32 <strong>不用于设定目标位</strong>（滞后未更新）。</li>
+</ul>
+<p><strong>仓位与事件调整</strong></p>
+<ul>
+<li>基准 1.5%（波动率调整：HV 302%、ATR 22.7%，等同于普通股 5–6% 仓位的风险敞口——<strong>切勿按常规仓位思维配置</strong>）。</li>
+<li><strong>2026-11-12 财报前</strong>：仓位封顶于 1.5%，不加仓。可持仓过财报（季报本身非主要风险）。</li>
+<li><strong>2026-11-14 前后 Q3 13F 披露窗口</strong>：预计显示机构大规模清仓，<strong>此窗口前主动减半</strong>，在抛压释放后再评估。</li>
+<li><strong>2026-10-28 FOMC 前 3 个交易日（10-23 起）</strong>：不新开仓。</li>
+</ul>
+<p><strong>期权策略（可选，仅供有期权权限账户）</strong></p>
+<ul>
+<li><strong>不建议卖期权</strong>：ATM IV 70–107% 看似高，但相对 HV20 302% 与 22.7% 的日 ATR 并非溢价，且 Oct-16 为<strong>负 Gamma</strong>（波动会被放大），裸卖 put 的尾部风险未被充分补偿。</li>
+<li><strong>若必须用期权表达</strong>：<strong>Jan-2027 $7.5 / $15 call spread</strong>（DTE 120，ATM IV 94%，implied move ±30.7%）。理由：定义风险、避开正股的无限落刀风险、$15 上沿贴合 Dec call 墙（4,773 OI）。<strong>权利金投入不超过组合 0.4%，视同全额损失预算。</strong></li>
+<li>明确回避：Sep-18（DTE 1，max pain $25 完全失效）与所有 $20+ 行权价的&quot;彩票 call&quot;（Jan-27 $20 有 10,127 OI，是散户拥挤区）。</li>
+</ul>
+<h3 id='zh8'>27. 失效条件</h3>
+<p><strong>看空论点失效（应转向更积极，可提升至&quot;买入&quot;）</strong></p>
+<ol>
+<li>公司披露生物标志物亚组的<strong>完整、统计学稳健</strong>数据，并宣布与 FDA 达成明确的注册路径共识。</li>
+<li><strong>CEO 或 CFO</strong> 出现公开市场买入（注意：signal_factors 中 <strong>CFO 买入 t=+2.58 是唯一显著的正向内部人特征</strong>，CEO 买入反而是显著负特征 t=-2.63 —— 因此<strong>只有 CFO 买入才算加分</strong>）。</li>
+<li>放量（&gt;1.5× 均量）收复 <strong>$9.82（POC）</strong> 并站稳 3 日以上。</li>
+<li>Q3 13F（11 月中）显示 Verdad 等医药专长机构在 Q3 <strong>继续加仓</strong>而非清仓。</li>
+<li>大额战略合作 / license-out 交易，为管线提供外部估值背书。</li>
+</ol>
+<p><strong>看多论点失效（应清仓离场）</strong></p>
+<ol>
+<li><strong>收盘跌破 $5.40</strong>（触发结构止损）。</li>
+<li><strong>宣布 ATM 或增发定价</strong>——在 $7 附近增发将是毁灭性稀释，此条<strong>优先于价格止损</strong>。</li>
+<li>Akkaraju 或 Foresite 系出现<strong>任何主动卖出</strong>（打破 12 个月零卖出记录）→ 唯一的核心看多支柱崩塌。</li>
+<li>亚组策略被公司自己降级、或 envudeucitinib 项目被削减/终止。</li>
+<li>反弹至 $9–10 后<strong>无法放量突破且再度跌回 $8 下方</strong>——确认为下降趋势中的反弹陷阱。</li>
+<li>出现红旗申报（NT 10-Q/10-K、退市通知）——当前为<strong>无</strong>，需持续监控。</li>
+</ol>
+<h3 id='zh8'>28. 下一步观察清单（1–4 周）</h3>
+<div class='tbl'><table>
+<thead>
+<tr>
+<th>日期</th>
+<th>事项</th>
+<th>关注点</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>持续（每日）</strong></td>
+<td><strong>avg5/avg50 量能比</strong></td>
+<td><strong>降至 &lt;1.0 是第 2 批入场的硬性前提</strong>（当前 1.54，未满足）</td>
+</tr>
+<tr>
+<td>持续（每日）</td>
+<td>SEC EDGAR Form 4</td>
+<td>Akkaraju/Foresite 是否继续买入或<strong>首次卖出</strong>；是否出现 CFO 买入</td>
+</tr>
+<tr>
+<td>持续</td>
+<td>SEC EDGAR 424B5 / 8-K Item 1.01</td>
+<td><strong>shelf 提款 / ATM 启动 = 立即清仓信号</strong></td>
+</tr>
+<tr>
+<td>09-18（周五）</td>
+<td>Sep OPEX</td>
+<td>僵尸 OI 到期清理，之后 Oct-16 的 $8 put 墙成为主导支撑</td>
+</tr>
+<tr>
+<td><strong>09-22</strong></td>
+<td><strong>FOMC 纪要</strong></td>
+<td>鹰派确认 → 10Y 若破 5.0%，小盘 biotech 再受压</td>
+</tr>
+<tr>
+<td>09-30</td>
+<td>PCE + GDP</td>
+<td>通胀超预期 → 贴现率逆风加剧</td>
+</tr>
+<tr>
+<td>10-02</td>
+<td>非农</td>
+<td>强 = 更鹰 = 对 ALMS 负面</td>
+</tr>
+<tr>
+<td>10-16</td>
+<td><strong>Oct 月度 OPEX</strong></td>
+<td>max pain $10；观察是否向 $10 磁吸（需 GEX 转正才有效）</td>
+</tr>
+<tr>
+<td>10-28</td>
+<td>FOMC</td>
+<td>前 3 个交易日不新开仓</td>
+</tr>
+<tr>
+<td><strong>11-12</strong></td>
+<td><strong>Q3 财报</strong></td>
+<td>现金余额（验证 2.2 年跑道）、亚组数据披露时间表、Ph3 设计与成本指引</td>
+</tr>
+<tr>
+<td><strong>11-14 前后</strong></td>
+<td><strong>Q3 13F 集中披露</strong></td>
+<td><strong>预期机构大规模清仓，抛压窗口，此前减半仓位</strong></td>
+</tr>
+<tr>
+<td>不定</td>
+<td>学术会议 / 投资者日</td>
+<td>LUMUS 亚组完整数据 —— <strong>本案真正的二元催化剂，日期未公告（数据缺失）</strong></td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h3 id='zh8'>数据缺失与局限说明</h3>
+<ul>
+<li><strong>PE 历史分位无法计算</strong>（无正 EPS 期间），估值仅能依赖 PS/净现金。</li>
+<li><strong>LUMUS 亚组数据的下一次披露日期未知</strong> —— 这是最重要的催化剂，但数据包与公开日历均无明确日期。</li>
+<li>10-Q XBRL 的 &quot;Cash &amp; Equiv $64M&quot; 与 yfinance 的 &quot;totalCash $502M&quot; 口径不一致，本报告采用后者（含短期投资），并以总资产 $561M 交叉验证；若实际可动用流动性接近 $64M，则<strong>现金跑道假设失效，全部结论需下调</strong>，请以最新 10-Q 资产负债表明细为准。</li>
+<li><strong>未执行网络检索补充</strong>（FOMC 市场定价、近 2 周最新新闻、竞品 TYK2 动态），本报告结论完全基于数据包。若需补充 CME FedWatch 降息概率、LUMUS 亚组细节或 BMS/Takeda 等 TYK2 竞品进展，请另行指示。</li>
+<li><code>unusual_activity</code> 为空、<code>congress_trades</code> 为空，相关分析仅作&quot;无信号&quot;处理。</li>
+</ul>
+<hr />
+<p>本分析仅供研究参考，不构成投资建议。</p>
+</article><section class='hero' lang='en'><span class='rating r-hold'>Hold</span><span class='score'>Score 42 / 100</span><div class='bar'><i style='width:42.0%'></i></div><div class='grid'><div class='kv'><div class='l'>Price</div><div class='v'>7.78</div></div><div class='kv'><div class='l'>Entry range</div><div class='v'>6.3 – 7.2</div></div><div class='kv'><div class='l'>Stop loss</div><div class='v'>5.4</div></div><div class='kv'><div class='l'>Target 1</div><div class='v'>9.8</div></div><div class='kv'><div class='l'>Target 2</div><div class='v'>12.5</div></div><div class='kv'><div class='l'>Position size</div><div class='v'>1.5%</div></div><div class='kv'><div class='l'>Confidence</div><div class='v'>Medium</div></div></div><div class='reason'><div><b>Key reason</b> Down 69% in the 4 weeks since the LUMUS failure to roughly 2.1x net cash; Director Akkaraju bought $8.3 million on the open market after the crash at a price 36% above spot, with zero insider sales and $60 million of net insider buying over 12 months, but technicals and the shareholder base have not bottomed</div><div><b>Key risk</b> Lead indication invalidated; the biomarker subgroup requires an entirely new Ph3 that would exhaust cash and trigger dilution via the shelfs in hand; 98.5% of shares underwater compounded by Q3 13F institutional liquidation pressure in mid-November, with valuation able to converge toward net cash of $3.6/share</div></div><div class='scores'><span>Macro <b>4</b>/10</span><span>Event risk <b>4</b>/10</span><span>Fundamentals <b>4</b>/10</span><span>Flows/chips <b>6</b>/10</span><span>Technicals <b>2</b>/10</span><span>Options <b>4</b>/10</span></div><ul class='cat'><li>2026-09-22 · FOMC meeting minutes</li><li>2026-09-30 · PCE price index + GDP</li><li>2026-10-02 · Nonfarm payrolls</li><li>2026-10-16 · October monthly options expiration (max pain $10)</li><li>2026-10-28 · FOMC rate decision</li><li>2026-11-12 · Q3 earnings (EPS consensus -0.75) plus cash runway / Ph3 guidance</li><li>2026-11-14 · Q3 13F cluster disclosures; expected institutional liquidation pressure</li></ul></section><nav class='toc' lang='en'><a href='#en1'>Executive Summary</a><a href='#en2'>Layer 1: Macro and Event Risk</a><a href='#en3'>Layer 2: Fundamentals and Valuation</a><a href='#en4'>Layer 3: Flows and Shareholder Base</a><a href='#en5'>Layer 4: Technicals</a><a href='#en6'>Layer 5: Options Market</a><a href='#en7'>Layer 6: Synthesis and Trading Plan</a></nav><article lang='en'><h1>ALMS Investment Analysis Report (2026-09-17)</h1>
+<h2 id='en1'>Executive Summary</h2>
+<div class='tbl'><table>
+<thead>
+<tr>
+<th>Item</th>
+<th>Content</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Investment View</td>
+<td><strong>Hold / Stand Aside</strong> (do not chase at current price; small probing position only for high-risk-tolerance accounts)</td>
+</tr>
+<tr>
+<td>Composite Score</td>
+<td><strong>42 / 100</strong></td>
+</tr>
+<tr>
+<td>Confidence</td>
+<td>Medium</td>
+</tr>
+<tr>
+<td>Investment Horizon</td>
+<td>Medium-term, 1–6 months</td>
+</tr>
+<tr>
+<td>Current Price</td>
+<td>$7.78 (2026-09-17 close)</td>
+</tr>
+<tr>
+<td>Entry Range</td>
+<td>$6.30–7.20 (3 tranches; first tranche no more than 1/3 of planned position)</td>
+</tr>
+<tr>
+<td>Stop Loss</td>
+<td>Close &lt; $5.40 (breaks the structure above the 52-week low of $3.76 + 2×ATR buffer)</td>
+</tr>
+<tr>
+<td>Price Targets</td>
+<td>T1 $9.80 (POC / share-cost peak) / T2 $12.50 (December max pain + lower edge of the gap)</td>
+</tr>
+<tr>
+<td>Suggested Position</td>
+<td><strong>0.8%–1.5%</strong> of portfolio (volatility-adjusted, &quot;option-like&quot; small position)</td>
+</tr>
+<tr>
+<td>Core Thesis</td>
+<td>Stock fell 69% in 4 weeks after the LUMUS failure; current price is ~2× net cash. Director Akkaraju — in the 99.5th percentile of insider skill — actively bought $8.3M at $10.6–11.2 after the crash, with zero insider sales and $60M of net insider buying over 12 months</td>
+</tr>
+<tr>
+<td>Key Risk</td>
+<td>envudeucitinib's lead indication has been invalidated; pipeline value now hinges heavily on a post-hoc biomarker subgroup analysis. If subsequent regulatory dialogue disappoints, the $502M cash balance burns at -$209M/yr and valuation can converge toward net cash of $3.9/share</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2 id='en2'>Layer 1: Macro and Event Risk</h2>
+<p><strong>1. Federal Reserve (fact)</strong></p>
+<ul>
+<li>The 2026-09-16 FOMC concluded yesterday with a <strong>rate hike</strong> to 3.75%–4.00%; hawk/dove score <strong>+6.4 (HAWKISH)</strong> versus +0.9 neutral HOLD at each of the prior two meetings — a <strong>hawkish policy inflection</strong>.</li>
+<li>Next FOMC: 2026-10-28, 41 days away. FOMC minutes are released 2026-09-22 (5 days away), the secondary risk point this month.</li>
+<li>10Y yield 4.95% (+6.28% over 20 days); DXY 100.25 (+1.44% over 20 days), above both MA50 and MA200. <strong>Rising rates + a stronger dollar is the most adverse macro combination for long-duration, unprofitable biotech</strong> (inference, but the mechanism is clear: a higher discount rate directly compresses the DCF present value of clinical-stage biotech).</li>
+<li>Conclusion: macro is a <strong>clear headwind</strong> for ALMS. With the FOMC already behind us there is no &quot;de-risk into the event&quot; constraint, but it also means hawkish repricing is still transmitting into long-duration assets.</li>
+</ul>
+<p><strong>2. Macro Calendar (next 2 weeks, high impact)</strong></p>
+<div class='tbl'><table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Event</th>
+<th>Transmission to ALMS</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>09-22</td>
+<td>FOMC minutes</td>
+<td>If further hikes are confirmed, XBI / small-cap biotech under pressure</td>
+</tr>
+<tr>
+<td>09-30</td>
+<td>PCE + GDP</td>
+<td>Hot inflation → 10Y higher → negative</td>
+</tr>
+<tr>
+<td>10-01</td>
+<td>ISM Manufacturing</td>
+<td>Indirect (risk appetite)</td>
+</tr>
+<tr>
+<td>10-02</td>
+<td>Nonfarm payrolls</td>
+<td>Strong NFP = more hawkish = negative; weak NFP is actually positive for biotech</td>
+</tr>
+<tr>
+<td>10-05</td>
+<td>ISM Services</td>
+<td>Indirect</td>
+</tr>
+</tbody>
+</table></div>
+<p>Note: no CPI/PPI/retail sales releases fall within this window (the data package shows 0 dates).</p>
+<p><strong>3. Market Environment (fact)</strong></p>
+<ul>
+<li>SPY 762.47, QQQ 716.20, both above MA50/MA200; VIX 15.53 (-12.95% over 5 days), in the &quot;normal&quot; band — risk appetite is not poor.</li>
+<li><strong>IWM 286.21 has broken below its MA50, -4.89% over 20 days</strong> — small caps are markedly underperforming. With beta of 1.73 and a $1.0B market cap, ALMS is small-cap biotech; <strong>large-cap strength does not translate into strength here</strong>, and IWM's weakness is the more relevant reference.</li>
+<li>ALMS is <strong>-67.3%</strong> relative to SPY over 3 months — extreme underperformance.</li>
+</ul>
+<p><strong>4. Company Events (fact — this is the entire case)</strong></p>
+<ul>
+<li><strong>2026-09-01 (8-K Item 8.01): the LUMUS Phase 2b lupus trial missed its primary endpoint in the overall population.</strong> The stock fell 56.58% that day on 22.76× 50-day average volume, the worst single day since listing.</li>
+<li>2026-09-09 news: the company announced it will still <strong>advance envudeucitinib on the basis of a biomarker subgroup</strong> (inference: the overall population failed and the program now depends on a post-hoc subgroup, sharply raising regulatory and commercial uncertainty).</li>
+<li>Analyst response (split; fact): Guggenheim downgraded Buy→Neutral; Oppenheimer maintained Outperform, target $55→$37, calling the decline &quot;possibly excessive&quot;; Wells Fargo $51→$25; Morgan Stanley $39→$29; HC Wainwright <strong>upgraded</strong> Neutral→Buy but cut its target $25→$15. Mean target across 8 analysts is $32.13 (low $15 / high $46), recommendationKey = strong_buy.
+<ul>
+<li><strong>Important caveat</strong>: a mean target of $32 implies +313% from spot — a textbook sign that <strong>targets are badly stale / not fully updated</strong>, and unusable as a valuation anchor. Even the most conservative, HC Wainwright's $15, implies +93%.</li>
+</ul>
+</li>
+<li><strong>Next earnings: 2026-11-12 (56 days away)</strong>, inside the holding horizon; consensus EPS -$0.75.</li>
+<li>Red-flag screen: <strong>none</strong> (no NT 10-K, no delisting notice).</li>
+<li>Dilution: <strong>2 effective shelfs (S-3ASR filed 2026-03-19 + S-3 filed 2025-07-03)</strong>. With a -$209M/yr burn and the stock at $7.78, <strong>ATM/secondary risk is the second-largest risk in this case</strong> (inference: management is typically reluctant to issue at depressed levels after a data failure, and a 2.4-year cash runway affords room to wait, which lowers the probability of a forced raise within 6 months).</li>
+</ul>
+<p><strong>Binary earnings-risk assessment</strong>: the 11-12 Q3 print is not itself a primary risk source (for a clinical-stage company the quarterly report merely confirms burn). <strong>The true binary event is the disclosure of the full LUMUS biomarker-subgroup dataset at a medical conference / investor day and the outcome of FDA discussions</strong> (timing undisclosed = missing data). Recommendation: <strong>it is acceptable to hold through the 11-12 print, but the position must be capped at the planned maximum beforehand, with no adds.</strong></p>
+<hr />
+<h2 id='en3'>Layer 2: Fundamentals and Valuation</h2>
+<p><strong>5. Operations (fact, 10-Q XBRL)</strong></p>
+<div class='tbl'><table>
+<thead>
+<tr>
+<th>Period</th>
+<th>Revenue ($M)</th>
+<th>Net Income ($M)</th>
+<th>EPS</th>
+<th>YoY Revenue</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2026-06-30</td>
+<td>2</td>
+<td>-142</td>
+<td>-1.11</td>
+<td>-37.7%</td>
+</tr>
+<tr>
+<td>2026-03-31</td>
+<td>2</td>
+<td>-93</td>
+<td>-0.74</td>
+<td>-90.0%</td>
+</tr>
+<tr>
+<td>2025-12-31 (10-K)</td>
+<td>24</td>
+<td>-243</td>
+<td>-2.86</td>
+<td>—</td>
+</tr>
+<tr>
+<td>2025-09-30</td>
+<td>2</td>
+<td>-111</td>
+<td>-1.06</td>
+<td>—</td>
+</tr>
+</tbody>
+</table></div>
+<ul>
+<li>Revenue is collaboration/milestone in nature and carries no operating meaning ($7.4M TTM). <strong>This is a pure clinical-stage company; the income statement is not an investment basis.</strong></li>
+<li>EPS surprise history is erratic: +74.2%, +3.9%, -11.3%, -15.7% over the last 4 quarters — no signal value for a revenue-less biotech.</li>
+</ul>
+<p><strong>6. Valuation</strong></p>
+<ul>
+<li>P/E, forward P/E and EV/EBITDA are <strong>all meaningless</strong> (EPS -4.11, EBITDA negative); the historical P/E percentile is <strong>missing data</strong> (no periods of positive EPS).</li>
+<li>P/S of 136× is equally meaningless.</li>
+<li><strong>The only valid valuation anchors are cash and pipeline</strong>:
+<ul>
+<li>Market cap $1.007B; cash and equivalents $502.3M (yfinance); total debt $36.4M → <strong>net cash of roughly $466M ≈ $3.60/share</strong> (on ~129M shares).</li>
+<li>Note: the 10-Q line &quot;Cash &amp; Equiv $64M&quot; differs from yfinance's $502M because of short-term investments / marketable securities classification; total assets of $561M cross-check that the $502M basis is closer to true liquidity.</li>
+<li><strong>At $7.78 the stock trades at ~2.1× net cash</strong>, i.e. the market values the entire pipeline (envudeucitinib + the ESK-001 series + early-stage) at roughly <strong>$540M</strong>.</li>
+</ul>
+</li>
+<li>Free cash flow of -$208.6M/yr → <strong>cash runway of roughly 2.2–2.4 years</strong> (into roughly end-2028); no imminent financing cliff.</li>
+</ul>
+<p><strong>7. Assessment (inference):</strong></p>
+<ul>
+<li>Bull case: a $540M pipeline valuation for a TYK2/JAK platform company with multiple remaining indications and a signal in a subgroup is <strong>no longer an optimistic price</strong>.</li>
+<li>Bear case: the LUMUS overall-population failure moves <strong>the largest indication (lupus) from &quot;probable&quot; to &quot;requires re-validation&quot;</strong>, and the biomarker-subgroup strategy will almost certainly require an entirely new, expensive Phase 3 — consuming the full existing cash balance and triggering dilution.</li>
+<li><strong>Net conclusion: fundamentals score 4/10.</strong> Not a value trap, but not &quot;cheap&quot; either — merely &quot;not absurdly expensive.&quot;</li>
+</ul>
+<hr />
+<h2 id='en4'>Layer 3: Flows and Shareholder Base</h2>
+<p><strong>8/9c. Insiders (the strongest bullish evidence in this case)</strong></p>
+<p><strong>Facts (Form 4, insider_trace):</strong></p>
+<ul>
+<li>Trailing 365 days: <strong>16 buys / $50.95M, 0 sells</strong>, across 6 distinct buyers (data package <code>insider_summary_365d</code>). Extending to 60 filings: 40 buys totaling $61.7M, 9 sells + tax withholding totaling $1.55M, <strong>net buying of $60.1M</strong>, with <strong>0% of activity under 10b5-1 plans (all discretionary open-market trades)</strong>.</li>
+<li><strong>Key timing</strong>: on 2026-09-04 and 2026-09-08 — the 3rd and 5th trading days after the LUMUS collapse — <strong>Director AKKARAJU SRINIVAS bought on the open market</strong>: ~$2.46M @ $11.17 on 09-04 (structured as 2 transactions) and ~$5.81M @ $10.63 on 09-08 (two blocks of 273,291 + 273,290 shares), alongside two Sale(D) transactions of 48,066 / 48,065 shares @ $10.55 (inferred to be account-structure adjustments between affiliated entities; net still a large purchase). <strong>The batch totals roughly $8.3M of net buying.</strong></li>
+<li>Akkaraju's historical win-rate percentile is <strong>99.5</strong> (n=16, 62.5% hit rate, average 63-day excess return <strong>+50.7%</strong>; in pharma/biotech, 15 trades, 67% hit rate, +56.5% excess) — <strong>his area of specialization covers this stock exactly.</strong></li>
+<li>The Tananbaum / Foresite complex (skill 94.9, pharma/biotech excess +54.1%) bought roughly $10.6M per entity between 2025-11 and 2026-01 in the $5.98–$17.00 range.</li>
+<li>On the sell side there is only small-scale selling by 6 executives on 2026-08-05 (&lt;$0.6M in aggregate, inferred to be vesting withholding/routine) plus one Form 144 (Pangali, 5,000 shares / $140K, negligible).</li>
+</ul>
+<p><strong>9d. Credibility check (mandatory — this step materially weakens the above signal)</strong></p>
+<p>Per <code>skill_persistence</code>:</p>
+<div class='tbl'><table>
+<thead>
+<tr>
+<th>Module</th>
+<th>cross_section_ols beta</th>
+<th>t</th>
+<th>Conclusion</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>13F</td>
+<td><strong>-0.0497</strong></td>
+<td><strong>-2.23</strong></td>
+<td>Significantly <strong>negative</strong> — &quot;following high-skill institutions&quot; <strong>inverts</strong> out of sample. Top-bottom excess -0.60%. <strong>13F skill_pct must not be used as a reason to buy.</strong></td>
+</tr>
+<tr>
+<td>Insiders</td>
+<td>+0.0764</td>
+<td><strong>+0.58</strong></td>
+<td>Fails significance (|t|&lt;2). Top-bottom +5.75% is positive in direction but <strong>unvalidated</strong>.</td>
+</tr>
+<tr>
+<td>Congress</td>
+<td>-0.0250</td>
+<td>-0.22</td>
+<td>Not significant.</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>This means: Akkaraju's &quot;99.5 percentile&quot; label carries no statistical force in itself; you cannot buy simply because he has &quot;been right historically.&quot;</strong> One must fall back on the significant features in <code>signal_factors</code>:</p>
+<p>Significant terms in the insider-event regression (n=16,986, clustered by month):</p>
+<ul>
+<li><strong>CFO buying: b=+0.0301, t=+2.58 (significantly positive)</strong> → <strong>no</strong> CFO buying in this case; not applicable.</li>
+<li><strong>Low-priced stock (&lt;$5): b=+0.0481, t=+2.56 (significantly positive)</strong> → purchases here were at $10.6–17.0, <strong>not applicable</strong> (and spot at $7.78 is still &gt;$5).</li>
+<li><strong>CEO buying: b=-0.0218, t=-2.63 (significantly negative)</strong> → no CEO buying here; neutral.</li>
+<li>10% holders only: b=-0.0098, t=-0.90 (not significant, but negative in direction) → <strong>Foresite/Tananbaum fall in this bucket, so their signal is discounted.</strong></li>
+<li>Cluster buying (≥3 people within 30 days): b=-0.0102, t=-1.58 (not significant, negative direction) → the 4-person cluster buy in 2025-W46 <strong>is not a positive.</strong></li>
+<li>log(amount): t=-0.87, <strong>size carries no signal</strong> — the $8.3M absolute scale earns no extra credit.</li>
+</ul>
+<blockquote>
+<p><strong>Honest conclusion (the most important paragraph in this report)</strong>: <strong>not one</strong> significant feature of insider buying is present in this case. Akkaraju's purchase is <strong>qualitatively persuasive</strong> (Director, non-10b5-1, discretionary buying after a crash, sector expertise match, 10 consecutive months of buying with no selling, ~$29M of his own money), but it is <strong>quantitatively unvalidated</strong>. It therefore serves as <strong>supporting evidence that downside is limited</strong>, and <strong>cannot be the primary reason to buy.</strong></p>
+</blockquote>
+<p><strong>9. 13F Institutions (as of 2026-06-30, lagged 79 days, over which the stock fell from ~$28 to $7.78)</strong></p>
+<div class='tbl'><table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Holders</td>
+<td>198 (195 prior quarter, +3)</td>
+</tr>
+<tr>
+<td>New / Added / Trimmed / Exited</td>
+<td>30 / 60 / 48 / 27</td>
+</tr>
+<tr>
+<td>Total institutional shares</td>
+<td>118.12M (114.82M prior quarter), <strong>net +2.87%</strong></td>
+</tr>
+<tr>
+<td>Institutional ownership</td>
+<td><strong>93.53%</strong> (extremely high; the float is heavily institutional)</td>
+</tr>
+<tr>
+<td>High-skill (top 20%) institutions</td>
+<td>7 buying / 3 selling / 13 unchanged</td>
+</tr>
+</tbody>
+</table></div>
+<ul>
+<li>Large buyers: FMR +5.80M shares (+595%, and filed a 13G on 08-06 for a 5.5% stake), T. Rowe +1.91M (+58%), Jupiter Topco new 2.36M, BlackRock +1.05M, Novo Holdings new 1.10M.</li>
+<li>Large sellers: Janus Henderson exited -2.12M, UBS -2.10M, Point72 exited, Citadel exited, Cormorant -0.66M.</li>
+<li><strong>Sector-expert, high-skill managers moved in opposite directions</strong>: Verdad Advisers (skill 83.9; 45 pharma/biotech trades, 71% hit rate, +13.1% excess, and the 4th-ranked sector expert in this name) <strong>added +32.9%</strong>, while Farallon (skill 92.3; 40 pharma/biotech trades, 62% hit rate, +10.9% excess) <strong>exited</strong>. <strong>They cancel out.</strong></li>
+<li><strong>Fatal staleness problem</strong>: all of this activity occurred at a cost basis around <strong>$28</strong>, whereas the LUMUS data landed on September 1. <strong>The Q2 13F has zero timing value today</strong>; it establishes only one thing — <strong>the shareholder base is extremely crowded at high cost, and the Q3 13F (disclosed around November 14) will very likely show large-scale liquidation, creating a second wave of institutional selling pressure.</strong> This is a substantive bearish factor.</li>
+<li>The local cache <code>universe_13f_alpha</code> (scan dated 2026-02-19, alpha 62.5, &quot;Structural Accumulation / HIGH confidence&quot;) states its own break condition as &quot;fundamental deterioration invalidates the patience thesis.&quot; <strong>That condition was triggered on 2026-09-01, and this cached conclusion should be treated as void.</strong></li>
+</ul>
+<p><strong>9b. Congressional trading</strong>: <code>congress_trades</code> is <strong>empty</strong> — no member of Congress has traded ALMS. High-skill members' pharma-related activity over the past 90 days is scattered (Salazar bought MRK, mixed buying/selling in MRNA) with no thematic direction. Given the congressional module's OLS t = -0.22 (not significant), <strong>disregard entirely.</strong></p>
+<p><strong>10. Cost-Basis Distribution (a decisively bearish structure)</strong></p>
+<ul>
+<li>Average cost <strong>$15.67</strong>, median $10.74; the average holder is down <strong>-50.4%</strong>.</li>
+<li><strong>Only 1.5% of shares are in profit; 98.5% are underwater (of which 79.2% are more than 20% underwater).</strong></li>
+<li>The 70% cost band is $9.14–$26.12 (186% wide — <strong>extremely dispersed</strong>).</li>
+<li>Share-cost peaks (all above spot = all resistance): $8.05 (+3.5%), $8.62 (+10.8%), $9.31 (+19.6%), $10.22 (+31.4%), plus distant peaks at $25.09 / $26.29.</li>
+<li><strong>Interpretation</strong>: &lt;10% of shares in profit is theoretically a bottoming characteristic, but it must be accompanied by <strong>contracting volume</strong>. The current 5-day average volume / 50-day average volume = <strong>1.54 (still elevated)</strong>, so <strong>the bottoming condition is not yet met.</strong> At the same time, the dense $8.05–$10.22 supply band means <strong>any rally into $8–10.2 will meet break-even selling</strong> — which directly caps T1.</li>
+</ul>
+<p><strong>11. Short Interest</strong></p>
+<ul>
+<li>Short % of float <strong>7.27%</strong>, days to cover <strong>6.42</strong>. Moderately high, but <strong>not squeeze conditions</strong> (a squeeze typically needs &gt;15% + DTC&gt;5 + a positive catalyst). Absent a positive catalyst, 7.27% short interest is more likely <strong>persistent suppression</strong> than fuel.</li>
+</ul>
+<hr />
+<h2 id='en5'>Layer 4: Technicals</h2>
+<p><strong>12. Moving Averages (uniformly bearish)</strong></p>
+<ul>
+<li>Close $7.78 vs MA5 $8.50 (-8.5%) / MA10 $9.53 (-18.4%) / MA20 $15.01 (<strong>-48.2%</strong>) / MA50 $22.36 (<strong>-65.2%</strong>) / MA200 $22.28 (<strong>-65.1%</strong>).</li>
+<li>ma_cluster: short-term dispersion 83.68%, 5-50 dispersion 178.15%, classified as &quot;<strong>moving averages dispersed</strong>,&quot; with an &quot;intertwined&quot; arrangement (in reality a transitional state within a cliff-edge decline).</li>
+<li>The 2025-11-19 golden cross has fully failed; MA50 will cross below MA200 within weeks (death cross in progress).</li>
+<li><strong>There is no moving-average support of any kind; price is in a vacuum.</strong></li>
+</ul>
+<p><strong>13. Volume-Price</strong></p>
+<ul>
+<li>20-day up/down volume ratio <strong>0.48</strong> (down-day volume is more than 2× up-day volume) → distribution-dominated.</li>
+<li>OBV is <strong>falling</strong> over 20 days and price is <strong>falling</strong> over 20 days — &quot;volume and price aligned,&quot; i.e. a <strong>healthy decline</strong> (no divergence, no bottom signal).</li>
+<li>Latest volume 1.96M vs 20-day average 4.36M (0.45×) → volume exhaustion after the panic climax; but avg5/avg50 = 1.54 remains elevated, so <strong>turnover is not finished.</strong></li>
+</ul>
+<p><strong>14. Volume Spike Days (last 60 days)</strong></p>
+<div class='tbl'><table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Vol/Avg</th>
+<th>Change</th>
+<th>Close</th>
+<th>Candle</th>
+<th>Close Position</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2026-06-26</td>
+<td>5.39×</td>
+<td>+5.47%</td>
+<td>$26.40</td>
+<td>Up</td>
+<td>0.94 (high) → now fully invalidated</td>
+</tr>
+<tr>
+<td><strong>2026-09-01</strong></td>
+<td><strong>22.76×</strong></td>
+<td><strong>-56.58%</strong></td>
+<td>$9.47</td>
+<td><strong>Down</strong></td>
+<td>0.31 → <strong>textbook distribution/crash day; $9.47 becomes strong resistance</strong></td>
+</tr>
+<tr>
+<td>2026-09-02</td>
+<td>5.81×</td>
+<td>+9.29%</td>
+<td>$10.35</td>
+<td>Up</td>
+<td>0.49 → dip buyers, <strong>all now underwater</strong></td>
+</tr>
+<tr>
+<td>2026-09-03</td>
+<td>3.83×</td>
+<td>+9.76%</td>
+<td>$11.36</td>
+<td>Up</td>
+<td>0.65 → same as above</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Key inference</strong>: the high-volume bounce buyers of 09-02 / 09-03 (roughly 5.8× / 3.8× average volume) are all trapped at $10.35–11.36, <strong>which explains the two straight weeks of grinding decline since</strong> — the dip buyers are capitulating. <strong>That capitulation process is not yet complete</strong>, which is the most direct technical reason not to initiate a position now.</p>
+<p><strong>15. Volume Profile (6 months)</strong></p>
+<ul>
+<li><strong>POC = $9.82</strong>, value area $9.82–$28.11. Note that <strong>VAL = POC = $9.82</strong>, i.e. at $7.78 the stock has already <strong>broken below the entire value-area low</strong> and sits in a low-volume vacuum → no support beneath, but any reversal back to $9.82 would be fast (vacuums travel quickly in both directions).</li>
+<li>High-volume nodes: $9.82 / $24.57 / $21.62 / $10.41 / $25.75.</li>
+<li>20-day VWAP <strong>$10.85</strong> — the average cost of every buyer over the past month, and intermediate-term resistance.</li>
+<li><strong>Cross-validation against cost-basis peaks</strong>: $9.82 (POC) ≈ $9.31 / $10.22 (share-cost peaks) → <strong>$9.3–10.4 is a very strong resistance band and forms the ceiling for T1.</strong></li>
+</ul>
+<p><strong>16. Momentum / Volatility</strong></p>
+<ul>
+<li><strong>RSI14 = 19.42</strong>, deeply oversold (&lt;30). But note: in crash-type declines RSI can sit at 15–25 for extended periods — <strong>oversold ≠ buy signal</strong>; there is no bullish RSI divergence (price made a new low and so did RSI).</li>
+<li>MACD -4.467 / signal -4.047 / <strong>histogram -0.42</strong>, with hist_prev5 = -1.133 → <strong>the histogram is converging (-1.13 → -0.42)</strong>, the <strong>only positive technical sign</strong> in this name: downside momentum is weakening.</li>
+<li>Bollinger bandwidth 183.38%, <strong>99.6th percentile over 1 year</strong> — extreme expansion. Bandwidth at this level typically means <strong>volatility has peaked</strong>, with contraction rather than further expansion ahead (inference: the most violent leg of the decline is most likely past, but contraction can be achieved through sideways consolidation and does not necessarily imply a rally).</li>
+<li>ATR14 = $1.77 (<strong>22.74%</strong>), HV20 = <strong>302%</strong>. This is an extreme-volatility asset; <strong>any position must be scaled by volatility.</strong></li>
+<li>Period returns: 1W -21.4% / 1M -68.7% / 3M -66.3% / 6M -69.4% / <strong>1Y +87.0%</strong> (the positive 1-year return reflects an extremely low starting point; $3.76 is the 52-week low).</li>
+<li><strong>-75.2%</strong> from the 52-week high; the 52-week low of $3.76 is the only historical structural level below.</li>
+</ul>
+<hr />
+<h2 id='en6'>Layer 5: Options Market</h2>
+<p><strong>17. Max Pain</strong></p>
+<div class='tbl'><table>
+<thead>
+<tr>
+<th>Expiry</th>
+<th>DTE</th>
+<th>Max Pain</th>
+<th>vs Spot</th>
+<th>Interpretation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>09-18</td>
+<td>1</td>
+<td>$25.00</td>
+<td><strong>+221%</strong></td>
+<td>Wholly invalidated — OI is zombie positioning left over from before the crash; <strong>no reference value</strong></td>
+</tr>
+<tr>
+<td>10-16 (monthly)</td>
+<td>29</td>
+<td><strong>$10.00</strong></td>
+<td><strong>+28.5%</strong></td>
+<td>Monthly OPEX; some pinning relevance</td>
+</tr>
+<tr>
+<td>12-18</td>
+<td>92</td>
+<td>$12.00</td>
+<td>+54.2%</td>
+<td>Also dominated by zombie OI</td>
+</tr>
+<tr>
+<td>2027-01-15</td>
+<td>120</td>
+<td><strong>$7.00</strong></td>
+<td><strong>-10.0%</strong></td>
+<td><strong>LEAP-level, freshest OI (call OI 23,511), closest to spot</strong></td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Inference</strong>: $7.00 (Jan-27 max pain) and $10.00 (Oct max pain) define a <strong>$7–$10 pinning band</strong>, highly consistent with the cost-basis and POC analysis. This is <strong>the same band</strong> cross-validated by three independent methods in this report (share-cost peaks, volume profile, options max pain), lending it above-average credibility.</p>
+<p><strong>18. OI Walls</strong></p>
+<ul>
+<li><strong>Above (resistance)</strong>: Oct-16 $25 calls (6,017) — zombie; the meaningful ones are Oct $10 (1,062) and <strong>Jan-27 $7 (10,128) / $20 (10,127)</strong>. Dec-18 $15 calls (4,773).</li>
+<li><strong>Below (support)</strong>: <strong>Oct-16 $8 puts (2,544) and $10 puts (2,215)</strong> — <strong>the $8 put wall is the nearest and most effective floor reference</strong>; at $7.78 spot has just broken below it, and market makers have hedging-driven buy interest near $8. Jan-27 $7 puts (3,001).</li>
+<li><strong>Effective range: floor $7.0–8.0, ceiling $10.0–10.5.</strong></li>
+</ul>
+<p><strong>19. Put/Call</strong></p>
+<ul>
+<li>Total volume PCR <strong>0.75</strong>, total OI PCR <strong>0.32</strong>.</li>
+<li><strong>Oct-16 volume PCR = 1.81 (the only meaningfully bearish near-dated expiry)</strong>, OI PCR 0.58 — indicating <strong>recent new flow is dominated by put buying / hedging</strong>, still in panic/defensive mode.</li>
+<li>Jan-27 volume PCR <strong>0.07</strong> (499 calls vs 35 puts) — <strong>extremely bullish speculative long-dated call buying</strong>, the classic footprint of &quot;lottery-ticket dip buying,&quot; which as a contrarian indicator reads <strong>cautionary</strong> (&lt;0.5 signals excess optimism).</li>
+<li><strong>Conclusion: near-dated panic + far-dated lottery tickets</strong> — the standard positioning structure four weeks after a crash; no directional signal.</li>
+</ul>
+<p><strong>20. Implied Volatility</strong></p>
+<ul>
+<li>ATM IV: Oct 70.1% / Dec 107.3% / Jan-27 94.1%; <strong>HV20 = 302%</strong>.</li>
+<li><strong>IV &lt;&lt; HV, i.e. IV is at a discount to realized volatility</strong> (unusual, because HV20 is heavily inflated by the -56.6% day). The correct reading: the market believes <strong>the one-off event is past and future volatility will be far below the last 20 days.</strong>
+<ul>
+<li>Implication: <strong>not a setup for selling options</strong> (IV is not nominally high, and 70% IV on a stock with a 22.7% ATR is no premium); <strong>buying options is not cheap either.</strong></li>
+</ul>
+</li>
+<li>Implied move: Oct-16 (29 days) <strong>±18.9%</strong>; Jan-27 (120 days) <strong>±30.7%</strong>. That is, the market prices a 68% probability of landing in <strong>$5.39–$10.17</strong> by mid-January — internally consistent with this report's entry and target ranges.</li>
+<li>Skew: put90 − call110 is <strong>sharply negative across the board</strong> (-30 to -98 pts). This is <strong>not</strong> steep put skew but rather <strong>far out-of-the-money call IV running far above put IV</strong> (reverse skew), the classic &quot;post-crash lottery-call demand + no remaining put buyers (because the worst has already happened)&quot; configuration. <strong>In biotech this is generally not a bullish signal but a marker of crowded retail speculation.</strong></li>
+</ul>
+<p><strong>21. GEX</strong></p>
+<ul>
+<li>Net GEX <strong>+$31,467/1%</strong>, classified as &quot;<strong>positive gamma (market makers dampen volatility)</strong>.&quot;</li>
+<li>But by expiry: <strong>Oct-16 GEX = -$52,719 (negative gamma, the nearest and most active expiry)</strong>, Jan-27 +$69,831, Dec +$18,983 (far-dated positive gamma stemming from zombie call OI).</li>
+<li><strong>Revised assessment: the net positive gamma reading is contaminated by far-dated zombie positioning. Oct-16 — which actually drives price action over the next month — is negative gamma, meaning near-term volatility will be amplified and sharp moves in both directions will persist.</strong> One cannot infer range-bound trading from &quot;positive gamma.&quot;</li>
+</ul>
+<p><strong>22. Unusual Options Activity</strong>: <code>unusual_activity</code> is <strong>empty</strong> — no large premium prints, no new positions with vol/OI &gt; 2 recently. <strong>No footprint of informed trading</strong>, which supports neither a bullish nor a bearish view but does indicate that <strong>institutions are not expressing a directional view in the options market.</strong></p>
+<hr />
+<h2 id='en7'>Layer 6: Synthesis and Trading Plan</h2>
+<h3 id='en8'>23. Bull/Bear Evidence Table</h3>
+<p><strong>Bullish (5 points)</strong></p>
+<div class='tbl'><table>
+<thead>
+<tr>
+<th>#</th>
+<th>Evidence</th>
+<th>Weight</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Director Akkaraju (pharma expertise, non-10b5-1) bought $8.3M at $10.6–11.2 on the open market 3–5 trading days after the crash; insiders are <strong>net buyers of $60M with zero discretionary sales</strong> over 12 months</td>
+<td><strong>High</strong> (qualitatively), but quantitatively unvalidated (see 9d)</td>
+</tr>
+<tr>
+<td>2</td>
+<td>At $7.78 the stock trades at ~<strong>2.1× net cash</strong> (net cash $466M ≈ $3.60/share), with a 2.2–2.4 year runway, no near-term financing cliff and no red-flag filings</td>
+<td>High</td>
+</tr>
+<tr>
+<td>3</td>
+<td>RSI 19.4 deeply oversold + MACD histogram converging from -1.13 to -0.42 + Bollinger bandwidth at the 99.6th percentile (volatility peak) → <strong>the most violent leg of the decline is most likely past</strong></td>
+<td>Medium</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Cost basis, volume profile and options max pain <strong>independently cross-validate</strong> a $7–$10 pinning band, with the Oct $8 put wall + Jan-27 max pain of $7 forming a floor</td>
+<td>Medium</td>
+</tr>
+<tr>
+<td>5</td>
+<td>The sell side has not fully capitulated: Oppenheimer maintains Outperform ($37), HC Wainwright <strong>upgraded to Buy against the tide</strong>, MS/WFC maintain Overweight; 8-analyst mean target $32</td>
+<td><strong>Low</strong> (targets are clearly stale and unusable as a valuation anchor)</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Bearish (5 points)</strong></p>
+<div class='tbl'><table>
+<thead>
+<tr>
+<th>#</th>
+<th>Evidence</th>
+<th>Weight</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><strong>LUMUS Ph2b failed in the overall population</strong>, invalidating the core indication; the biomarker subgroup is a post-hoc analysis requiring an entirely new Ph3 that would consume all cash and trigger dilution; <strong>2 effective shelfs are in hand</strong></td>
+<td><strong>High</strong></td>
+</tr>
+<tr>
+<td>2</td>
+<td><strong>98.5% of shares are underwater, 79.2% deeply so</strong>; four cost peaks at $8.05/$8.62/$9.31/$10.22 form dense break-even selling pressure; average cost $15.67</td>
+<td><strong>High</strong></td>
+</tr>
+<tr>
+<td>3</td>
+<td><strong>Q2 13F shows 93.5% institutional ownership, 198 holders, net +2.87%, with cost concentrated near $28 → the Q3 13F (mid-November) will almost certainly show large-scale liquidation; a second wave of institutional selling pressure is coming</strong></td>
+<td><strong>High</strong></td>
+</tr>
+<tr>
+<td>4</td>
+<td>No technical support whatsoever: price is -65% below MA200, has broken below the value-area low of $9.82 into a vacuum, up/down volume ratio 0.48, OBV falling, and the 09-02/03 dip buyers are still capitulating (avg5/avg50 = 1.54, volume has not contracted)</td>
+<td><strong>High</strong></td>
+</tr>
+<tr>
+<td>5</td>
+<td>Compounding macro headwinds: hawkish FOMC turn (+6.4, already hiked), 10Y at 4.95% and rising, stronger DXY, IWM below MA50 — the worst combination for long-duration unprofitable biotech; beta of 1.73 amplifies it</td>
+<td>Medium</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id='en8'>24. Scorecard (medium-term horizon, standard weights)</h3>
+<div class='tbl'><table>
+<thead>
+<tr>
+<th>Dimension</th>
+<th>Weight</th>
+<th>Score</th>
+<th>Weighted</th>
+<th>Basis</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Macro / market environment</td>
+<td>15%</td>
+<td><strong>4/10</strong></td>
+<td>0.60</td>
+<td>SPY/QQQ healthy, but hawkish FOMC turn + 10Y 4.95% + IWM below MA50; small-cap biotech headwind</td>
+</tr>
+<tr>
+<td>Event risk (inverse)</td>
+<td>10%</td>
+<td><strong>4/10</strong></td>
+<td>0.40</td>
+<td>No red flags, FOMC past, earnings still distant; but shelf dilution risk + undated binary events in subgroup data / FDA dialogue</td>
+</tr>
+<tr>
+<td>Fundamentals / valuation</td>
+<td>25%</td>
+<td><strong>4/10</strong></td>
+<td>1.00</td>
+<td>2.1× net cash is not expensive, 2.4-year runway; but lead indication invalidated, P/E and P/S both useless, no positive cash flow</td>
+</tr>
+<tr>
+<td>Flows / shareholder base</td>
+<td>20%</td>
+<td><strong>6/10</strong></td>
+<td>1.20</td>
+<td>$60M of net insider buying with adds after the crash (strong); but 98.5% underwater + Q3 13F liquidation coming (strongly negative); skill signals fail OLS validation and cannot be the primary basis</td>
+</tr>
+<tr>
+<td>Technicals</td>
+<td>20%</td>
+<td><strong>2/10</strong></td>
+<td>0.40</td>
+<td>Uniformly bearish alignment, below the value area, volume-price aligned to the downside; the sole bright spot is MACD histogram convergence</td>
+</tr>
+<tr>
+<td>Options structure</td>
+<td>10%</td>
+<td><strong>4/10</strong></td>
+<td>0.40</td>
+<td>$7–8 put wall + Jan max pain of $7 provide a floor; but near-dated negative gamma, Oct PCR 1.81 defensive, crowded far-dated call speculation, no informed activity</td>
+</tr>
+<tr>
+<td><strong>Total</strong></td>
+<td>100%</td>
+<td></td>
+<td><strong>4.00 → 40/100</strong></td>
+<td></td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Adjustment +2 points</strong>: an insider committed $8.3M of his own money at a price 36% above spot <strong>after the bad news was known</strong> — the only evidence in the data package combining an informational edge with real capital at risk, warranting a modest uplift beyond the purely mechanical score.</p>
+<p><strong>Final composite score: 42 / 100.</strong></p>
+<h3 id='en8'>25. Investment View</h3>
+<h1>Hold / Stand Aside (do not chase; small, staged probing positions permitted)</h1>
+<p><strong>Confidence: Medium</strong></p>
+<p>Rationale: this is a textbook <strong>&quot;limited downside, unclear upside&quot;</strong> falling-knife situation. Net cash of $3.60/share plus a director's $8.3M of hard cash deployed after the crash establish a reasonable value floor below $6; but 98.5% of the float underwater, the four-layer resistance band at $8–10.4, dip-buyer capitulation that is not yet complete, and <strong>the second wave of institutional selling pressure tied to the mid-November Q3 13F disclosures</strong> together mean risk/reward is not favorable over the next 4–8 weeks. <strong>The correct medium-term (1–6 month) approach is to wait for a low-volume base to form, not to buy the dip in size now.</strong></p>
+<ul>
+<li>If already long: <strong>cut to a tracking position (≤1%), do not add</strong>, and sell the remainder into any rally to $9.3–10.4.</li>
+<li>If not long: <strong>do not chase at current prices</strong>; build a limited probing position in tranches per the plan below.</li>
+</ul>
+<h3 id='en8'>26. Trading Plan</h3>
+<p><strong>Entry (3 tranches, 1.5% total planned position)</strong></p>
+<div class='tbl'><table>
+<thead>
+<tr>
+<th>Tranche</th>
+<th>Trigger</th>
+<th>Price</th>
+<th>% of planned position</th>
+<th>Basis</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Tracking position near spot</td>
+<td><strong>$7.00–7.20</strong></td>
+<td>33%</td>
+<td>Jan-27 max pain $7 + Jan $7 put wall (3,001 OI)</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Volume-contraction confirmation</td>
+<td><strong>$6.30–6.80</strong> and 5-day average volume &lt; 50-day average volume (i.e. avg5/avg50 &lt; 1.0)</td>
+<td>33%</td>
+<td>Volume confirmation that dip-buyer capitulation is complete; <strong>this is the critical precondition</strong></td>
+</tr>
+<tr>
+<td>3</td>
+<td>Breakout confirmation (either/or, not both)</td>
+<td>Reclaims <strong>$9.82</strong> (POC) on volume &gt;1.5× average</td>
+<td>34%</td>
+<td>Reclaiming the value-area low = structural reversal</td>
+</tr>
+</tbody>
+</table></div>
+<blockquote>
+<p><strong>Discipline requirement</strong>: the &quot;volume contraction&quot; condition for tranche 2 <strong>must be satisfied</strong> before execution. Currently avg5/avg50 = 1.54, so the condition is <strong>not met</strong>. If price falls to $6.3–6.8 but volume is still elevated, <strong>skip this tranche.</strong></p>
+</blockquote>
+<p><strong>Stop Loss</strong></p>
+<ul>
+<li>Structural stop: <strong>close &lt; $5.40</strong> (the midpoint between the 52-week low of $3.76 and spot, and roughly a 2×ATR buffer below the tranche-2 entry; ATR14 = $1.77).</li>
+<li>Event stop (<strong>takes precedence over price</strong>): announcement of an ATM/secondary pricing, or negative subgroup data / FDA outcome → <strong>liquidate immediately and unconditionally</strong>, without waiting for price.</li>
+<li>Single-trade risk: on a 1.5% position, average cost ~$6.80, stop at $5.40 → approximately <strong>-0.31%</strong> at the portfolio level. Acceptable.</li>
+</ul>
+<p><strong>Targets</strong></p>
+<div class='tbl'><table>
+<thead>
+<tr>
+<th>Target</th>
+<th>Price</th>
+<th>Basis</th>
+<th>Return from $6.80 average cost</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>T1</strong></td>
+<td><strong>$9.80</strong></td>
+<td>POC $9.82 = VAL = cost peaks $9.31/$10.22 = near Oct max pain of $10 — <strong>fourfold confluence resistance</strong></td>
+<td><strong>+44%</strong></td>
+</tr>
+<tr>
+<td><strong>T2</strong></td>
+<td><strong>$12.50</strong></td>
+<td>Dec-18 max pain $12 + the lower edge of the 09-01 crash gap, above the 20-day VWAP of $10.85</td>
+<td><strong>+84%</strong></td>
+</tr>
+</tbody>
+</table></div>
+<ul>
+<li><strong>Risk/reward</strong>: to T1, 44% / 20.6% ≈ <strong>2.1 : 1</strong>; to T2 ≈ <strong>4.1 : 1</strong>. The ratios pass, but <strong>the probability of reaching them is low</strong> — which is precisely why the score is only 42.</li>
+<li><strong>At least 50% must be sold at T1</strong> — the break-even selling pressure at $9.3–10.4 is the most certain technical fact in this case.</li>
+<li>The $32 mean analyst target is <strong>not used to set price targets</strong> (stale, not updated).</li>
+</ul>
+<p><strong>Position Sizing and Event Adjustments</strong></p>
+<ul>
+<li>Baseline 1.5% (volatility-adjusted: HV 302%, ATR 22.7%, equivalent to the risk exposure of a 5–6% position in an ordinary stock — <strong>do not size this with conventional position-sizing intuition</strong>).</li>
+<li><strong>Ahead of the 2026-11-12 earnings</strong>: cap the position at 1.5%, no adds. Holding through earnings is acceptable (the quarterly print itself is not the primary risk).</li>
+<li><strong>Around the 2026-11-14 Q3 13F disclosure window</strong>: expect large-scale institutional liquidation; <strong>cut the position by half ahead of this window</strong> and reassess after the selling pressure clears.</li>
+<li><strong>The 3 trading days before the 2026-10-28 FOMC (from 10-23)</strong>: no new positions.</li>
+</ul>
+<p><strong>Options Strategy (optional; for options-approved accounts only)</strong></p>
+<ul>
+<li><strong>Selling options is not advised</strong>: ATM IV of 70–107% looks high but is no premium relative to HV20 of 302% and a 22.7% daily ATR, and Oct-16 carries <strong>negative gamma</strong> (volatility will be amplified) — the tail risk of naked put selling is not adequately compensated.</li>
+<li><strong>If options must be used to express the view</strong>: a <strong>Jan-2027 $7.5 / $15 call spread</strong> (DTE 120, ATM IV 94%, implied move ±30.7%). Rationale: defined risk, avoids the unbounded falling-knife risk of the common stock, and the $15 upper strike aligns with the Dec call wall (4,773 OI). <strong>Premium outlay should not exceed 0.4% of the portfolio and should be budgeted as a total loss.</strong></li>
+<li>Explicitly avoid: Sep-18 (DTE 1, max pain of $25 entirely invalidated) and all &quot;lottery calls&quot; at strikes of $20+ (Jan-27 $20 carries 10,127 OI and is a crowded retail zone).</li>
+</ul>
+<h3 id='en8'>27. Invalidation Conditions</h3>
+<p><strong>Bear thesis invalidated (shift to a more constructive stance; could be upgraded to &quot;Buy&quot;)</strong></p>
+<ol>
+<li>The company discloses <strong>complete, statistically robust</strong> biomarker-subgroup data and announces a clear registrational-pathway alignment with the FDA.</li>
+<li><strong>CEO or CFO</strong> open-market buying appears (note: in <code>signal_factors</code>, <strong>CFO buying at t=+2.58 is the only significantly positive insider feature</strong>, while CEO buying is a significantly negative feature at t=-2.63 — therefore <strong>only CFO buying counts as a positive</strong>).</li>
+<li>Price reclaims <strong>$9.82 (POC)</strong> on volume &gt;1.5× average and holds it for 3+ days.</li>
+<li>The Q3 13F (mid-November) shows pharma-specialist institutions such as Verdad <strong>continuing to add</strong> in Q3 rather than liquidating.</li>
+<li>A major strategic partnership / license-out transaction providing external valuation validation for the pipeline.</li>
+</ol>
+<p><strong>Bull thesis invalidated (exit entirely)</strong></p>
+<ol>
+<li><strong>Close below $5.40</strong> (triggers the structural stop).</li>
+<li><strong>Announcement of an ATM or secondary pricing</strong> — issuing equity near $7 would be devastatingly dilutive; this condition <strong>takes precedence over the price stop</strong>.</li>
+<li><strong>Any discretionary selling</strong> by Akkaraju or the Foresite complex (breaking the 12-month zero-sale record) → the sole core bullish pillar collapses.</li>
+<li>The subgroup strategy is downgraded by the company itself, or the envudeucitinib program is cut back / terminated.</li>
+<li>A rally to $9–10 that <strong>fails to break out on volume and falls back below $8</strong> — confirming a bear-market rally trap.</li>
+<li>Red-flag filings appear (NT 10-Q/10-K, delisting notice) — currently <strong>none</strong>; requires ongoing monitoring.</li>
+</ol>
+<h3 id='en8'>28. Watch List for the Next 1–4 Weeks</h3>
+<div class='tbl'><table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Item</th>
+<th>Focus</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Ongoing (daily)</strong></td>
+<td><strong>avg5/avg50 volume ratio</strong></td>
+<td><strong>Falling below 1.0 is a hard prerequisite for tranche 2</strong> (currently 1.54, not met)</td>
+</tr>
+<tr>
+<td>Ongoing (daily)</td>
+<td>SEC EDGAR Form 4</td>
+<td>Whether Akkaraju/Foresite keep buying or <strong>sell for the first time</strong>; whether CFO buying appears</td>
+</tr>
+<tr>
+<td>Ongoing</td>
+<td>SEC EDGAR 424B5 / 8-K Item 1.01</td>
+<td><strong>A shelf takedown / ATM launch = immediate liquidation signal</strong></td>
+</tr>
+<tr>
+<td>09-18 (Fri)</td>
+<td>Sep OPEX</td>
+<td>Zombie OI expires and clears; thereafter the Oct-16 $8 put wall becomes the dominant support</td>
+</tr>
+<tr>
+<td><strong>09-22</strong></td>
+<td><strong>FOMC minutes</strong></td>
+<td>Hawkish confirmation → if the 10Y breaks 5.0%, renewed pressure on small-cap biotech</td>
+</tr>
+<tr>
+<td>09-30</td>
+<td>PCE + GDP</td>
+<td>Hot inflation → intensified discount-rate headwind</td>
+</tr>
+<tr>
+<td>10-02</td>
+<td>Nonfarm payrolls</td>
+<td>Strong = more hawkish = negative for ALMS</td>
+</tr>
+<tr>
+<td>10-16</td>
+<td><strong>Oct monthly OPEX</strong></td>
+<td>Max pain $10; watch for pinning toward $10 (only valid if GEX turns positive)</td>
+</tr>
+<tr>
+<td>10-28</td>
+<td>FOMC</td>
+<td>No new positions in the preceding 3 trading days</td>
+</tr>
+<tr>
+<td><strong>11-12</strong></td>
+<td><strong>Q3 earnings</strong></td>
+<td>Cash balance (verifying the 2.2-year runway), subgroup data disclosure timeline, Ph3 design and cost guidance</td>
+</tr>
+<tr>
+<td><strong>Around 11-14</strong></td>
+<td><strong>Q3 13F cluster disclosures</strong></td>
+<td><strong>Expect large-scale institutional liquidation and a selling-pressure window; halve the position beforehand</strong></td>
+</tr>
+<tr>
+<td>TBD</td>
+<td>Medical conference / investor day</td>
+<td>Full LUMUS subgroup data — <strong>the true binary catalyst in this case; date unannounced (missing data)</strong></td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h3 id='en8'>Data Gaps and Limitations</h3>
+<ul>
+<li><strong>The historical P/E percentile cannot be computed</strong> (no periods of positive EPS); valuation can rely only on P/S and net cash.</li>
+<li><strong>The next disclosure date for the LUMUS subgroup data is unknown</strong> — this is the most important catalyst, but neither the data package nor public calendars provide a definitive date.</li>
+<li>The 10-Q XBRL &quot;Cash &amp; Equiv $64M&quot; and yfinance's &quot;totalCash $502M&quot; use inconsistent definitions; this report adopts the latter (inclusive of short-term investments), cross-validated against total assets of $561M. If actual accessible liquidity is closer to $64M, <strong>the cash-runway assumption fails and all conclusions must be revised downward</strong> — refer to the latest 10-Q balance-sheet detail.</li>
+<li><strong>No supplementary web research was performed</strong> (FOMC market pricing, news from the past 2 weeks, competitor TYK2 developments); this report's conclusions rest entirely on the data package. If CME FedWatch rate-cut probabilities, LUMUS subgroup details, or competitor TYK2 progress at BMS/Takeda are needed, please advise separately.</li>
+<li><code>unusual_activity</code> is empty and <code>congress_trades</code> is empty; the related analysis is treated as &quot;no signal.&quot;</li>
+</ul>
+<hr />
+<p>This analysis is for research reference only and does not constitute investment advice.</p>
+</article></div></body></html>
