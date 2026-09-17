@@ -1,0 +1,1117 @@
+<!doctype html><html lang='zh' data-lang='zh' data-title-zh='NVDA 投资分析' data-title-en='NVDA investment analysis'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1,viewport-fit=cover'><title>NVDA 投资分析</title><style>
+html[data-lang="zh"] [lang="en"]:not(html), html[data-lang="en"] [lang="zh"]:not(html){display:none!important}
+.lang-toggle{position:fixed;top:calc(env(safe-area-inset-top,0px) + 10px);right:12px;z-index:50;display:flex;
+border:1px solid var(--line,#ccc);border-radius:999px;overflow:hidden;background:var(--card,#fff);font:12px/1 system-ui,sans-serif}
+.lang-toggle button{border:0;background:transparent;color:var(--muted,#666);padding:6px 10px;cursor:pointer}
+html[data-lang="zh"] .lang-toggle button[data-l="zh"], html[data-lang="en"] .lang-toggle button[data-l="en"]{background:var(--accent,#2f5bd3);color:#fff}
+</style>
+<script>(function(){var l;try{l=localStorage.getItem('report-lang')}catch(e){}
+if(l!=='zh'&&l!=='en'){l=(navigator.language||'').toLowerCase().indexOf('zh')===0?'zh':'en'}
+document.documentElement.setAttribute('data-lang',l);
+window.setLang=function(x){document.documentElement.setAttribute('data-lang',x);try{localStorage.setItem('report-lang',x)}catch(e){}
+document.title=document.documentElement.getAttribute('data-title-'+x)||document.title};
+document.addEventListener('DOMContentLoaded',function(){setLang(document.documentElement.getAttribute('data-lang'))});})();</script><style>
+:root{--bg:#f6f5f1;--card:#fff;--fg:#1b1b1d;--muted:#6a6a70;--line:#e2e1dc;--accent:#2f5bd3;
+--buy:#15803d;--sell:#c0262d;--hold:#b45309;--code:#f1f0ec}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#131315;--card:#1c1c1f;--fg:#ececef;
+--muted:#9a9aa2;--line:#2e2e33;--accent:#7aa2ff;--buy:#4ade80;--sell:#f87171;--hold:#fbbf24;--code:#18181b}}
+:root[data-theme="dark"]{--bg:#131315;--card:#1c1c1f;--fg:#ececef;--muted:#9a9aa2;--line:#2e2e33;--accent:#7aa2ff;
+--buy:#4ade80;--sell:#f87171;--hold:#fbbf24;--code:#18181b}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.7 -apple-system,"Segoe UI","Microsoft YaHei",sans-serif}
+.wrap{max-width:980px;margin:0 auto;padding:28px 16px 80px}
+.top{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px;align-items:baseline;padding-right:110px}
+.top h1{margin:0;font-size:26px}
+.top a{color:var(--accent);font-size:13px;text-decoration:none}
+.muted{color:var(--muted);font-size:13px}
+.hero{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px;margin:18px 0}
+.rating{display:inline-block;font-size:28px;font-weight:700;letter-spacing:.02em}
+.r-buy{color:var(--buy)}.r-sell{color:var(--sell)}.r-hold{color:var(--hold)}
+.score{font-size:15px;color:var(--muted);margin-left:12px}
+.bar{height:8px;background:var(--line);border-radius:4px;overflow:hidden;margin:10px 0 16px;max-width:360px}
+.bar i{display:block;height:100%;background:var(--accent)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.kv{border:1px solid var(--line);border-radius:8px;padding:8px 12px}
+.kv .l{font-size:12px;color:var(--muted)}.kv .v{font-size:18px;font-weight:600;font-variant-numeric:tabular-nums}
+.reason{margin-top:14px;display:grid;gap:6px}
+.reason div{padding:8px 12px;border-radius:8px;border:1px solid var(--line)}
+.scores{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:6px 16px;margin-top:14px;font-size:13px}
+.scores span b{font-variant-numeric:tabular-nums}
+.cat{margin-top:12px;font-size:13px}
+.cat li{margin:2px 0}
+article{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:8px 24px 24px}
+article h1{font-size:22px;margin:22px 0 10px}
+article h2{font-size:19px;margin:28px 0 10px;padding-top:12px;border-top:1px solid var(--line)}
+article h3{font-size:16px;margin:20px 0 8px}
+article table{border-collapse:collapse;width:100%;font-size:14px;font-variant-numeric:tabular-nums}
+article th,article td{border-bottom:1px solid var(--line);padding:6px 10px;text-align:left;vertical-align:top}
+article th{color:var(--muted);font-weight:600;white-space:nowrap}
+.tbl{overflow-x:auto;margin:10px 0}
+article pre{background:var(--code);border:1px solid var(--line);border-radius:6px;padding:12px;overflow-x:auto;font-size:12px}
+article code{background:var(--code);padding:1px 4px;border-radius:4px;font-size:13px}
+article blockquote{margin:10px 0;padding:4px 14px;border-left:3px solid var(--accent);color:var(--muted)}
+article a{color:var(--accent)}
+nav.toc{font-size:13px;margin:10px 0}
+nav.toc a{color:var(--accent);text-decoration:none;margin-right:14px;white-space:nowrap}
+.note{background:var(--card);border:1px dashed var(--line);border-radius:8px;padding:8px 12px;margin:10px 0;font-size:13px;color:var(--muted)}
+</style></head><body><div class='lang-toggle' role='group' aria-label='Language'><button type='button' data-l='zh' onclick="setLang('zh')">中文</button><button type='button' data-l='en' onclick="setLang('en')">EN</button></div><div class='wrap'><div class='top'><h1>NVDA <span lang='zh'>投资分析报告</span><span lang='en'>Investment analysis</span></h1><span class='muted'>20260916 · <span lang='zh'>周期</span><span lang='en'>Horizon</span> position · <a href='../reportdata/NVDA_20260916.html'><span lang='zh'>细节数据报告 →</span><span lang='en'>Detailed data report →</span></a></span></div><section class='hero' lang='zh'><span class='rating r-hold'>持有观望</span><span class='score'>综合评分 56 / 100</span><div class='bar'><i style='width:56.0%'></i></div><div class='grid'><div class='kv'><div class='l'>现价</div><div class='v'>213.9</div></div><div class='kv'><div class='l'>入场区间</div><div class='v'>200 – 208</div></div><div class='kv'><div class='l'>止损</div><div class='v'>189</div></div><div class='kv'><div class='l'>目标 1</div><div class='v'>230</div></div><div class='kv'><div class='l'>目标 2</div><div class='v'>250</div></div><div class='kv'><div class='l'>建议仓位</div><div class='v'>3%</div></div><div class='kv'><div class='l'>置信度</div><div class='v'>中</div></div></div><div class='reason'><div><b>核心理由</b> 营收同比+106%、GAAP PE处历史低位，基本面支撑中线持有，但宏观转鹰与技术走弱，宜等200-208回调分批</div><div><b>最大风险</b> 美联储3年来首次加息、10Y升至5%，高beta(1.92)估值压缩叠加董事大额抛售</div></div><div class='scores'><span>宏观 <b>3.5</b>/10</span><span>事件风险 <b>5</b>/10</span><span>基本面 <b>8</b>/10</span><span>资金筹码 <b>4.5</b>/10</span><span>技术面 <b>5</b>/10</span><span>期权 <b>5.5</b>/10</span></div><ul class='cat'><li>2026-09-18 · 季度OPEX(max pain 205)</li><li>2026-09-22 · FOMC纪要</li><li>2026-09-30 · PCE与GDP</li><li>2026-10-02 · 非农就业</li><li>2026-10-28 · FOMC决议</li><li>2026-11-17 · NVDA财报</li></ul></section><nav class='toc' lang='zh'><a href='#zh1'>结论摘要</a><a href='#zh2'>第一层：宏观与事件风险</a><a href='#zh3'>第二层：基本面与估值</a><a href='#zh4'>第三层：资金与筹码</a><a href='#zh5'>第四层：技术面</a><a href='#zh6'>第五层：期权市场</a><a href='#zh7'>第六层：综合与交易计划</a></nav><article lang='zh'><h1>NVDA 投资分析报告（2026-09-16）</h1>
+<h2 id='zh1'>结论摘要</h2>
+<div class='tbl'><table>
+<thead>
+<tr>
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>投资意见</td>
+<td>持有观望</td>
+</tr>
+<tr>
+<td>综合评分</td>
+<td>56 / 100</td>
+</tr>
+<tr>
+<td>置信度</td>
+<td>中</td>
+</tr>
+<tr>
+<td>投资周期</td>
+<td>中线（1-6个月），跨11-17财报</td>
+</tr>
+<tr>
+<td>现价</td>
+<td>$213.90（2026-09-16收盘）</td>
+</tr>
+<tr>
+<td>入场区间</td>
+<td>$200–208，分3批挂单，不追高</td>
+</tr>
+<tr>
+<td>止损</td>
+<td>$189（收盘价跌破才算）</td>
+</tr>
+<tr>
+<td>目标价</td>
+<td>T1 $230 / T2 $250</td>
+</tr>
+<tr>
+<td>建议仓位</td>
+<td>现在0%；回调到入场区间后建到组合的3%，最多5%</td>
+</tr>
+<tr>
+<td>核心理由</td>
+<td>营收同比+106%，历史市盈率处在低位，公司质地和估值都支持中线持有；但宏观刚转鹰、技术面走弱，等回调再买比现价追高好</td>
+</tr>
+<tr>
+<td>最大风险</td>
+<td>美联储3年来首次加息，10年期美债收益率5.01%，压低估值；NVDA的beta是1.92，大盘下跌时它跌得更多</td>
+</tr>
+</tbody>
+</table></div>
+<blockquote>
+<p>说明：本报告只用了数据包里的数据，没有另外上网搜索，所以 CME FedWatch 的加息/降息概率、10月CPI日期、近两周新闻原文都缺。凡是标&quot;推断&quot;的，都是基于数据包的判断。</p>
+</blockquote>
+<hr />
+<h2 id='zh2'>第一层：宏观与事件风险</h2>
+<p><strong>1. 美联储</strong></p>
+<ul>
+<li>事实：今天（09-16）的FOMC加息25bp，利率区间升到3.75%-4.00%，打分+6.4（鹰派）。前两次会议都是不动（+0.9，中性）。新闻标题也证实这是&quot;3年来首次加息&quot;。</li>
+<li>事实：10年期美债收益率5.01%（5日+3.5%，20日+6.4%）；美元指数100.31，在50日和200日均线上方，还在走强。</li>
+<li>下一次FOMC是10-28，距今42天。今天的决议已经公布，&quot;会前3个交易日降仓&quot;这条不适用；但加息后市场还要重新定价，前几个交易日波动会偏大。</li>
+<li>推断：从降息转向加息，对高估值、长久期的成长股不利。反证：纳指当天收平（IBD新闻标题），市场可能已经提前消化了一部分。</li>
+<li>数据缺失：FedWatch对后面加息/降息的概率。</li>
+</ul>
+<p><strong>2. 宏观日历（未来2-3周）</strong></p>
+<ul>
+<li>09-22 FOMC会议纪要</li>
+<li>09-30 PCE物价指数 + GDP</li>
+<li>10-01 ISM制造业</li>
+<li>10-02 非农就业</li>
+<li>10-05 ISM服务业</li>
+<li>9月CPI的日期没抓到（数据缺失，按惯例应在10月中旬）。</li>
+<li>NVDA的beta是1.92，对利率和通胀数据很敏感。如果PCE或非农偏热，市场会预期继续加息，这是主要的下行触发点。</li>
+</ul>
+<p><strong>3. 市场环境</strong></p>
+<ul>
+<li>事实：SPY、QQQ、IWM都跌破了50日均线，但还在200日均线上方。20日涨跌幅分别是-1.75%、-1.78%、-5.19%。</li>
+<li>事实：VIX 17.71，20日上涨18.9%，但仍在&quot;正常&quot;区间。</li>
+<li>结论：大盘在中期回调、风险偏好降温，还不是恐慌。</li>
+</ul>
+<p><strong>4. 公司事件</strong></p>
+<ul>
+<li>下次财报是11-17，距今62天，在持有周期内。
+<ul>
+<li>过去20多个季度EPS几乎每次都超预期，最近4季超出幅度在3.5%–6.2%，这个优势在收窄。</li>
+<li>一致预期EPS 2.47，营收1,090亿美元。</li>
+<li><strong>财报二元风险</strong>：10-16到期的期权隐含波动约±7.7%，财报周的数字要等更近的合约。建议赚钱的仓位在财报前减掉1/3；新开的仓位如果浮盈不到5%，不要带过财报。</li>
+</ul>
+</li>
+<li>8-K公告：
+<ul>
+<li>08-17：签了重大协议，同时新增直接负债（Item 1.01/2.03）。具体内容没抓到（数据缺失）。推断是发债或大额采购协议，要核实。</li>
+<li>09-03：Item 8.01，其他事项。</li>
+<li>07-02：董事或高管有变动。</li>
+</ul>
+</li>
+<li>分析师：58家覆盖，评级&quot;强烈买入&quot;，平均目标价$328.66，比现价高54%（最低$180，最高$515）。08-27财报后大批上调目标价；Piper Sandler 09-10首次覆盖，给增持、目标$300。
+<ul>
+<li>反证：卖方目标价往往跟着股价走，而且股价早已偏离这些目标价。</li>
+</ul>
+</li>
+<li>新闻：苹果在和NVDA谈自研AI服务器用NVLink，偏正面，属于网络业务的增量。其他主要是加息和Anthropic IPO，对NVDA影响中性。</li>
+<li>红旗：只有2002年和2006年各一次延迟申报，已无关紧要。2025-05有一份S-3ASR储架注册，大公司常规操作，稀释风险低。</li>
+<li>数据异常：有一份13G显示&quot;NVIDIA Corporation持有9.3%&quot;，推断是解析错误，不作为依据。</li>
+</ul>
+<hr />
+<h2 id='zh3'>第二层：基本面与估值</h2>
+<p><strong>5. 增长</strong></p>
+<div class='tbl'><table>
+<thead>
+<tr>
+<th>季度结束</th>
+<th>营收(百万美元)</th>
+<th>同比</th>
+<th>净利润(百万美元)</th>
+<th>EPS</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2026-07-26</td>
+<td>96,221</td>
+<td>+105.9%</td>
+<td>59,688</td>
+<td>2.46</td>
+</tr>
+<tr>
+<td>2026-04-26</td>
+<td>81,615</td>
+<td>+85.2%</td>
+<td>58,321</td>
+<td>2.39</td>
+</tr>
+<tr>
+<td>2025-10-26</td>
+<td>57,006</td>
+<td>—</td>
+<td>31,910</td>
+<td>1.30</td>
+</tr>
+</tbody>
+</table></div>
+<ul>
+<li>事实：营收增速还在加快，净利率约63.7%。</li>
+<li>反证：环比看，营收+17.9%，但净利润只+2.3%，EPS从2.39到2.46。利润增速明显慢于营收。推断可能是毛利率下滑，或者有一次性项目，需要核实。</li>
+</ul>
+<p><strong>6. 估值</strong></p>
+<ul>
+<li>GAAP市盈率(TTM) 27.0倍，是近期历史的第1百分位，低于均值减1个标准差。
+<ul>
+<li>注意：这个历史区间只有26.7–35.2倍，样本期很短，参考价值有限。</li>
+</ul>
+</li>
+<li>前瞻市盈率13.7倍（前瞻EPS $15.61），PEG 0.46。
+<ul>
+<li>警告：前瞻EPS比TTM GAAP EPS高97%。就算把最新季度EPS年化，也只有约$9.8，折合约22倍。按$15.61算的前瞻估值可能偏乐观，只能当&quot;市场预期&quot;看。</li>
+</ul>
+</li>
+<li>市销率17倍，EV/EBITDA 25.3倍。</li>
+<li>同行对比：数据缺失。</li>
+</ul>
+<p><strong>7. 资产负债</strong></p>
+<ul>
+<li>XBRL口径：现金224亿美元，长期债务334亿美元。</li>
+<li>yfinance口径：现金625亿美元（推断含有价证券），总债务389亿美元。</li>
+<li>自由现金流418亿美元，财务很稳。</li>
+</ul>
+<p><strong>基本面结论</strong>：增长和盈利能力都是顶级，估值在自身历史低位，是持有NVDA的核心理由。</p>
+<hr />
+<h2 id='zh4'>第三层：资金与筹码</h2>
+<p><strong>8/9c. 内部人</strong></p>
+<ul>
+<li>事实：近365天0笔买入，43笔卖出，共14.4亿美元。</li>
+<li>董事Mark Stevens是主要卖家：
+<ul>
+<li>09-04在$230–234卖了约62万股，不是10b5-1计划内的。</li>
+<li>09-02提交了Form 144，拟再卖500万股，约10.9亿美元。</li>
+</ul>
+</li>
+<li>CEO和CFO的卖出基本都是10b5-1计划内或代扣税，信号弱。</li>
+<li>推断：Stevens在$230上方主动、大额卖出，而且还有大量待售，会在$225–235形成持续供给。</li>
+<li>可信度：内部人的回归（beta 0.076，t=0.58）不显著。有显著因子（CFO买入b=+0.030、t=2.58；CEO b=−0.022、t=−2.63），但都针对买入，NVDA没有买入，不适用。卖出只能当筹码压力的背景。</li>
+</ul>
+<p><strong>9. 13F（截至2026-06-30，已滞后约2.5个月）</strong></p>
+<ul>
+<li>持有机构5,966家，比上季多102家。
+<ul>
+<li>新建仓316家，加仓1,076家，减仓645家，清仓214家。</li>
+<li>机构总持股净增2.92%。</li>
+</ul>
+</li>
+<li>高胜率机构（前20%）：买入91家，卖出90家，基本打平。</li>
+<li>擅长半导体的高胜率机构，买卖也打平：
+<ul>
+<li>加仓：Peregrine、Cavalier、Pacific Point、Rakuten（+12%，持仓约9.3亿美元）</li>
+<li>清仓或减仓：Octahedron、Monolith、HIMENSION（−38%）、Melqart（−49%）、WT（清仓）</li>
+</ul>
+</li>
+<li>大资金：
+<ul>
+<li>买方：Norges新建仓3.26亿股（推断是统计口径切换，不算主动加仓）、FMR +3.2%、Susquehanna +135%</li>
+<li>卖方：Janus清仓8,300万股、CalPERS −33%、Point72 −94%、Citadel −37%</li>
+</ul>
+</li>
+<li><strong>9d 可信度</strong>：13F的截面回归beta=−0.050，t=−2.23，显著为负。跟随高胜率机构在样本外无效，甚至略反向，只能当背景。signal_factors里没有一项|t|≥2（组合权重t=1.85最接近），13F的变化不能用来择时。</li>
+<li>结论：机构拥挤度高、结构稳定；对冲基金（Point72、Citadel）在Q2减仓，边际买家主要是被动和长线资金。</li>
+</ul>
+<p><strong>9b. 国会议员</strong></p>
+<ul>
+<li>近期以小额卖出为主：Whitehouse 08-13卖出，Booker 08-11，Cisneros 08-18。</li>
+<li>Cleo Fields（技能分位98.5%）06-26小额买入。</li>
+<li>Pelosi 2025-12买了2027-01到期、行权价$100的看涨期权，同时卖出2万股。</li>
+<li>回归beta −0.033，t=−0.31，不显著，只当背景。</li>
+</ul>
+<p><strong>10. 筹码分布</strong></p>
+<ul>
+<li>平均成本$189.68；获利盘80.4%，套牢盘19.6%，集中在上方0–20%。</li>
+<li>筹码峰：$210.75（当前）、$219.25（上方压力）、$199.43和$181.96（支撑）。</li>
+<li>70%筹码集中在$172–218。获利盘没到90%的警戒线，但上方$219–236有套牢盘，还有Stevens的抛压。</li>
+</ul>
+<p><strong>11. 空头</strong></p>
+<ul>
+<li>空头占流通股1.29%，回补天数2.33天，没有逼空基础。</li>
+</ul>
+<hr />
+<h2 id='zh5'>第四层：技术面</h2>
+<p><strong>12. 均线</strong></p>
+<div class='tbl'><table>
+<thead>
+<tr>
+<th>MA5</th>
+<th>MA10</th>
+<th>MA20</th>
+<th>MA50</th>
+<th>MA100</th>
+<th>MA200</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>214.7</td>
+<td>220.5</td>
+<td>218.3</td>
+<td>213.4</td>
+<td>211.3</td>
+<td>197.6</td>
+</tr>
+</tbody>
+</table></div>
+<ul>
+<li>均线交织；价格在MA20下方，紧贴MA50（+0.25%）。</li>
+<li>短期均线密集度2.69%（&lt;3%），说明快要变盘，方向要看是否放量突破。</li>
+<li>50日线仍在200日线上方，长期结构没坏。</li>
+</ul>
+<p><strong>13. 量价</strong></p>
+<ul>
+<li>近20日上涨日和下跌日的成交量比0.8，下跌日量更大。</li>
+<li>OBV在降，但20日价格趋势仍上行，属于&quot;价涨OBV降&quot;的背离，警惕派发。</li>
+<li>近5日量能是50日均量的0.81倍，缩量回调。</li>
+</ul>
+<p><strong>14. 巨量交易</strong>：近60日没有超过2.5倍均量的日子。</p>
+<p><strong>15. 成交量分布</strong></p>
+<ul>
+<li>成交最密集价位(POC) $209.86；价值区$175.6–226.1。</li>
+<li>高量节点：209.9、218.9、208.1、211.7、200.9，与筹码峰$210.75、$199.43互相印证。</li>
+</ul>
+<p><strong>16. 动量与波动</strong></p>
+<ul>
+<li>RSI 46.9，中性。</li>
+<li>MACD柱−1.57，5天前还是+0.42，由正转负，动量走弱。</li>
+<li>布林带$205.5–231.2，带宽在1年的35.7%分位，没有明显收口。</li>
+<li>ATR14 = $7.52（3.5%）；HV20 44.75%。</li>
+<li>近3个月跑赢SPY 2.47%；1周−4.26%，距52周高点−9.4%。</li>
+</ul>
+<p><strong>技术结论</strong>：在$205–210支撑区上方回调，动量和量能偏弱。更可能的是先测试$205–210，再看MA200约$198。</p>
+<hr />
+<h2 id='zh6'>第五层：期权市场</h2>
+<p><strong>17. Max Pain（最大痛点）</strong></p>
+<div class='tbl'><table>
+<thead>
+<tr>
+<th>到期日</th>
+<th>Max Pain</th>
+<th>相对现价</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>09-18（周五OPEX）</td>
+<td>$205</td>
+<td>−4.2%</td>
+</tr>
+<tr>
+<td>10-16（月度）</td>
+<td>$200</td>
+<td>−6.5%</td>
+</tr>
+</tbody>
+</table></div>
+<ul>
+<li>两个都在现价下方，短期有向下的&quot;磁吸&quot;倾向。</li>
+</ul>
+<p><strong>18. OI墙</strong></p>
+<ul>
+<li>09-18：看涨墙在$230、$250、$240；看跌墙在$180、$200、$210。</li>
+<li>10-16：看涨OI最多的是$180（深度实值）和$220；看跌墙在$200、$195。</li>
+<li>结论：支撑$200–210，阻力$220–230。</li>
+</ul>
+<p><strong>19. Put/Call比</strong></p>
+<ul>
+<li>成交量PCR 0.70，持仓PCR 0.77，中性略偏多，不是极端值。</li>
+</ul>
+<p><strong>20. 隐含波动率</strong></p>
+<ul>
+<li>30天平值IV 33%，低于HV20 44.75%，期权相对便宜，适合买方或价差策略。</li>
+<li>09-18的看跌偏斜+15个点，短期下跌对冲需求强；10-16只有+2.9，比较平缓。</li>
+<li>30天预期波动±7.7%，对应约$197–230。</li>
+</ul>
+<p><strong>21. GEX</strong>：净GEX +5.65亿美元/1%，处于正Gamma。做市商会高抛低吸，周五OPEX前波动受压，价格区间震荡的概率大。</p>
+<p><strong>22. 异动</strong></p>
+<ul>
+<li>当天到期的$215看跌约21万张，成交价接近买价，偏主动卖出；$217.5看跌偏主动买入。都是日内博弈，信号弱。</li>
+<li>10-16的$215和$220看涨期权主动买入，权利金合计约1,670万美元，有人在押一个月内反弹。</li>
+<li>09-18深度实值$150看涨买入约2,300万美元，推断是替代持股或合成仓位。</li>
+<li>09-18 $280看跌大额成交，推断是锁仓或平仓，不代表方向。</li>
+<li>整体：没有明显的知情交易信号。</li>
+</ul>
+<hr />
+<h2 id='zh7'>第六层：综合与交易计划</h2>
+<p><strong>23. 多空证据</strong></p>
+<div class='tbl'><table>
+<thead>
+<tr>
+<th>看多</th>
+<th>权重</th>
+<th>看空</th>
+<th>权重</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>营收同比+106%且在加速，净利率约64%</td>
+<td>高</td>
+<td>美联储3年来首次加息（鹰派+6.4），10年期美债5.01%</td>
+<td>高</td>
+</tr>
+<tr>
+<td>GAAP市盈率在自身历史第1百分位</td>
+<td>高</td>
+<td>董事Stevens在$230上方主动卖出，另有500万股的Form 144待售；内部人全年0买入</td>
+<td>中</td>
+</tr>
+<tr>
+<td>分析师平均目标价$329，财报后集体上调</td>
+<td>中</td>
+<td>大盘跌破50日线，NVDA beta 1.92</td>
+<td>高</td>
+</tr>
+<tr>
+<td>$200–210有POC、筹码峰、看跌墙、MA50/MA100多重支撑</td>
+<td>中</td>
+<td>OBV背离，MACD柱转负，下跌日放量</td>
+<td>中</td>
+</tr>
+<tr>
+<td>10月看涨期权主动买入，IV低于HV，正Gamma防止急跌</td>
+<td>低</td>
+<td>本月Max Pain $200–205低于现价；上季环比利润只+2.3%</td>
+<td>中</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>24. 评分卡</strong></p>
+<div class='tbl'><table>
+<thead>
+<tr>
+<th>维度</th>
+<th>分数</th>
+<th>权重</th>
+<th>加权</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>宏观/市场环境</td>
+<td>3.5</td>
+<td>15%</td>
+<td>5.25</td>
+</tr>
+<tr>
+<td>事件风险</td>
+<td>5.0</td>
+<td>10%</td>
+<td>5.0</td>
+</tr>
+<tr>
+<td>基本面/估值</td>
+<td>8.0</td>
+<td>25%</td>
+<td>20.0</td>
+</tr>
+<tr>
+<td>资金与筹码</td>
+<td>4.5</td>
+<td>20%</td>
+<td>9.0</td>
+</tr>
+<tr>
+<td>技术面</td>
+<td>5.0</td>
+<td>20%</td>
+<td>10.0</td>
+</tr>
+<tr>
+<td>期权结构</td>
+<td>5.5</td>
+<td>10%</td>
+<td>5.5</td>
+</tr>
+<tr>
+<td><strong>合计</strong></td>
+<td></td>
+<td></td>
+<td><strong>≈56</strong></td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>25. 投资意见</strong>：<strong>持有观望（偏多，等回调买入）</strong>，置信度中。</p>
+<ul>
+<li>已经持有的：继续持有。</li>
+<li>空仓的：不在$214追高，按下面的计划回调时分批买。</li>
+</ul>
+<p><strong>26. 交易计划</strong></p>
+<ul>
+<li><strong>入场</strong>，每批1%，合计3%：
+<ol>
+<li>$207–208：MA50下沿、POC附近</li>
+<li>$203–204：09-18 Max Pain和看跌墙附近</li>
+<li>$199–200：筹码峰、10月看跌墙、MA200上方</li>
+</ol>
+</li>
+<li><strong>止损</strong>：收盘跌破$189。
+<ul>
+<li>依据：$199筹码峰下方 −1.4×ATR。</li>
+<li>单笔风险：按均价约$204算，约−7.4%；3%仓位对应组合风险约0.22%。</li>
+</ul>
+</li>
+<li><strong>目标</strong>：
+<ul>
+<li>T1 $230（看涨墙、Stevens的卖出价位），约+12.7%，风险收益比约1.7。</li>
+<li>T2 $250（看涨墙，接近52周高点$236上方的延伸），约+22.5%，风险收益比约3.0。</li>
+</ul>
+</li>
+<li><strong>仓位调整</strong>：
+<ul>
+<li>如果放量站上$220（收回MA20、MA10）且大盘收回50日线，可以加到5%。</li>
+<li>PCE（09-30）和非农（10-02）公布前不加仓。</li>
+<li>11-17财报前减掉1/3。</li>
+</ul>
+</li>
+<li><strong>期权方案</strong>（IV低于HV，适合买方价差）：买11-20到期的$210/$240看涨价差，赚财报前的升温和反弹。
+<ul>
+<li>或者在$200卖10-16到期的现金担保看跌期权，但IV不高，性价比一般，次选。</li>
+</ul>
+</li>
+</ul>
+<p><strong>27. 失效条件</strong></p>
+<ul>
+<li>收盘跌破$189，或放量跌破MA200（约$198）且3天收不回来：离场。</li>
+<li>PCE、非农偏热，市场开始定价10-28再加息，10年期美债站上5.2%：降到观望，仓位上限1%。</li>
+<li>8-K 1.01/2.03披露出不利条款，或Stevens加速卖出、其他高管也开始非计划卖出。</li>
+<li>看多方向：放量突破$236（52周高点），说明观望过于保守，应该追到3%。</li>
+</ul>
+<p><strong>28. 观察清单</strong></p>
+<div class='tbl'><table>
+<thead>
+<tr>
+<th>日期</th>
+<th>事件或指标</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>09-18</td>
+<td>季度OPEX：观察$205 Max Pain和$210看跌墙能否守住</td>
+</tr>
+<tr>
+<td>09-22</td>
+<td>FOMC会议纪要：有没有继续加息的倾向</td>
+</tr>
+<tr>
+<td>09-30</td>
+<td>PCE和GDP</td>
+</tr>
+<tr>
+<td>10-02</td>
+<td>非农</td>
+</tr>
+<tr>
+<td>10月中旬</td>
+<td>CPI（日期缺失）</td>
+</tr>
+<tr>
+<td>10-16</td>
+<td>月度OPEX（Max Pain $200）</td>
+</tr>
+<tr>
+<td>10-28</td>
+<td>FOMC</td>
+</tr>
+<tr>
+<td>11-14左右</td>
+<td>Q3的13F（看Point72/Citadel是否回补）</td>
+</tr>
+<tr>
+<td>11-17</td>
+<td>财报</td>
+</tr>
+<tr>
+<td>持续跟踪</td>
+<td>Stevens的Form 4进度；OBV是否转升；10年期美债和美元指数</td>
+</tr>
+</tbody>
+</table></div>
+<p>本分析仅供研究参考，不构成投资建议。</p>
+</article><section class='hero' lang='en'><span class='rating r-hold'>Hold</span><span class='score'>Score 56 / 100</span><div class='bar'><i style='width:56.0%'></i></div><div class='grid'><div class='kv'><div class='l'>Price</div><div class='v'>213.9</div></div><div class='kv'><div class='l'>Entry range</div><div class='v'>200 – 208</div></div><div class='kv'><div class='l'>Stop loss</div><div class='v'>189</div></div><div class='kv'><div class='l'>Target 1</div><div class='v'>230</div></div><div class='kv'><div class='l'>Target 2</div><div class='v'>250</div></div><div class='kv'><div class='l'>Position size</div><div class='v'>3%</div></div><div class='kv'><div class='l'>Confidence</div><div class='v'>Medium</div></div></div><div class='reason'><div><b>Key reason</b> Revenue +106% YoY and GAAP P/E near historical lows, so fundamentals support a medium-term hold; but with macro turning hawkish and technicals weakening, better to scale in on a pullback to 200-208</div><div><b>Key risk</b> First Fed hike in 3 years and 10Y yield up to 5%; valuation compression amplified by high beta (1.92), compounded by large director selling</div></div><div class='scores'><span>Macro <b>3.5</b>/10</span><span>Event risk <b>5</b>/10</span><span>Fundamentals <b>8</b>/10</span><span>Flows/chips <b>4.5</b>/10</span><span>Technicals <b>5</b>/10</span><span>Options <b>5.5</b>/10</span></div><ul class='cat'><li>2026-09-18 · Quarterly OPEX (max pain 205)</li><li>2026-09-22 · FOMC minutes</li><li>2026-09-30 · PCE and GDP</li><li>2026-10-02 · Nonfarm payrolls</li><li>2026-10-28 · FOMC decision</li><li>2026-11-17 · NVDA earnings</li></ul></section><nav class='toc' lang='en'><a href='#en1'>Executive Summary</a><a href='#en2'>Layer 1: Macro &amp;amp; Event Risk</a><a href='#en3'>Layer 2: Fundamentals &amp;amp; Valuation</a><a href='#en4'>Layer 3: Fund Flows &amp;amp; Positioning</a><a href='#en5'>Layer 4: Technicals</a><a href='#en6'>Layer 5: Options Market</a><a href='#en7'>Layer 6: Synthesis &amp;amp; Trading Plan</a></nav><article lang='en'><h1>NVDA Investment Analysis Report (2026-09-16)</h1>
+<h2 id='en1'>Executive Summary</h2>
+<div class='tbl'><table>
+<thead>
+<tr>
+<th>Item</th>
+<th>Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Rating</td>
+<td>Hold</td>
+</tr>
+<tr>
+<td>Composite Score</td>
+<td>56 / 100</td>
+</tr>
+<tr>
+<td>Confidence</td>
+<td>Medium</td>
+</tr>
+<tr>
+<td>Investment Horizon</td>
+<td>Medium-term (1–6 months), spanning the 11-17 earnings release</td>
+</tr>
+<tr>
+<td>Current Price</td>
+<td>$213.90 (2026-09-16 close)</td>
+</tr>
+<tr>
+<td>Entry Range</td>
+<td>$200–208, 3 staggered limit orders; do not chase</td>
+</tr>
+<tr>
+<td>Stop Loss</td>
+<td>$189 (triggered only on a closing break)</td>
+</tr>
+<tr>
+<td>Price Targets</td>
+<td>T1 $230 / T2 $250</td>
+</tr>
+<tr>
+<td>Suggested Position Size</td>
+<td>0% now; build to 3% of portfolio on a pullback into the entry range, max 5%</td>
+</tr>
+<tr>
+<td>Core Thesis</td>
+<td>Revenue +106% YoY and trailing P/E near historical lows; business quality and valuation both support a medium-term holding. However, macro has just turned hawkish and technicals are weakening, so waiting for a pullback beats chasing at the current price</td>
+</tr>
+<tr>
+<td>Key Risk</td>
+<td>First Fed rate hike in 3 years and the 10-year Treasury yield at 5.01% are compressing valuations; with a beta of 1.92, NVDA falls harder than the broad market in a sell-off</td>
+</tr>
+</tbody>
+</table></div>
+<blockquote>
+<p>Note: This report relies solely on the data package, with no additional web research. As a result, CME FedWatch hike/cut probabilities, the October CPI release date and full-text news from the past two weeks are unavailable. Anything marked &quot;inference&quot; is a judgment based on the data package.</p>
+</blockquote>
+<hr />
+<h2 id='en2'>Layer 1: Macro &amp; Event Risk</h2>
+<p><strong>1. Federal Reserve</strong></p>
+<ul>
+<li>Fact: Today's (09-16) FOMC raised rates by 25bp to a target range of 3.75%-4.00%, scored +6.4 (hawkish). The previous two meetings held rates steady (+0.9, neutral). News headlines confirm this is the &quot;first rate hike in 3 years.&quot;</li>
+<li>Fact: 10-year Treasury yield at 5.01% (5-day +3.5%, 20-day +6.4%); the US Dollar Index at 100.31, above its 50-day and 200-day moving averages and still strengthening.</li>
+<li>Next FOMC is 10-28, 42 days away. Today's decision is already out, so the &quot;reduce exposure 3 trading days before the meeting&quot; rule does not apply. However, the market still needs to reprice after the hike, so volatility is likely to run high for the next few trading days.</li>
+<li>Inference: A pivot from easing to tightening is negative for richly valued, long-duration growth stocks. Counterpoint: the Nasdaq closed flat on the day (per an IBD headline), so the market may have partly priced this in.</li>
+<li>Data gap: FedWatch probabilities for future hikes or cuts.</li>
+</ul>
+<p><strong>2. Macro Calendar (Next 2–3 Weeks)</strong></p>
+<ul>
+<li>09-22 FOMC minutes</li>
+<li>09-30 PCE price index + GDP</li>
+<li>10-01 ISM Manufacturing</li>
+<li>10-02 Nonfarm Payrolls</li>
+<li>10-05 ISM Services</li>
+<li>The September CPI release date was not captured (data gap; by convention it should fall in mid-October).</li>
+<li>With a beta of 1.92, NVDA is highly sensitive to rate and inflation data. A hot PCE or payrolls print would fuel expectations of further hikes and is the main downside trigger.</li>
+</ul>
+<p><strong>3. Market Environment</strong></p>
+<ul>
+<li>Fact: SPY, QQQ and IWM have all broken below their 50-day moving averages but remain above their 200-day moving averages. 20-day returns are -1.75%, -1.78% and -5.19%, respectively.</li>
+<li>Fact: VIX at 17.71, up 18.9% over 20 days, but still within the &quot;normal&quot; range.</li>
+<li>Conclusion: The broad market is in a medium-term pullback with cooling risk appetite, but not yet in panic.</li>
+</ul>
+<p><strong>4. Company Events</strong></p>
+<ul>
+<li>Next earnings release is 11-17, 62 days away, within the holding period.
+<ul>
+<li>EPS has beaten consensus almost every quarter for the past 20+ quarters. The last 4 beats ranged from 3.5% to 6.2%, so the margin is narrowing.</li>
+<li>Consensus EPS 2.47; revenue $109.0B.</li>
+<li><strong>Binary earnings risk</strong>: Options expiring 10-16 imply a move of about ±7.7%; the earnings-week figure will require closer-dated contracts. Trim profitable positions by 1/3 ahead of earnings; new positions with less than 5% unrealized gain should not be held through the print.</li>
+</ul>
+</li>
+<li>8-K filings:
+<ul>
+<li>08-17: Entry into a material definitive agreement plus creation of a direct financial obligation (Item 1.01/2.03). Details not captured (data gap). Inference: a debt issuance or large purchase agreement; needs verification.</li>
+<li>09-03: Item 8.01, Other Events.</li>
+<li>07-02: Director or officer change.</li>
+</ul>
+</li>
+<li>Analysts: 58 covering, consensus &quot;Strong Buy,&quot; average price target $328.66, 54% above the current price (low $180, high $515). Targets were broadly raised after the 08-27 earnings; Piper Sandler initiated on 09-10 at Overweight with a $300 target.
+<ul>
+<li>Counterpoint: Sell-side targets tend to chase the stock price, and the share price has long diverged from these targets.</li>
+</ul>
+</li>
+<li>News: Apple is in talks to use NVLink in its in-house AI servers, a positive and incremental for the networking business. Other headlines are mostly the rate hike and the Anthropic IPO, neutral for NVDA.</li>
+<li>Red flags: Only two late filings, in 2002 and 2006, now immaterial. An S-3ASR shelf registration filed 2025-05 is routine for large companies; dilution risk is low.</li>
+<li>Data anomaly: One 13G shows &quot;NVIDIA Corporation holds 9.3%.&quot; Inference: a parsing error; disregarded.</li>
+</ul>
+<hr />
+<h2 id='en3'>Layer 2: Fundamentals &amp; Valuation</h2>
+<p><strong>5. Growth</strong></p>
+<div class='tbl'><table>
+<thead>
+<tr>
+<th>Quarter Ended</th>
+<th>Revenue ($M)</th>
+<th>YoY</th>
+<th>Net Income ($M)</th>
+<th>EPS</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2026-07-26</td>
+<td>96,221</td>
+<td>+105.9%</td>
+<td>59,688</td>
+<td>2.46</td>
+</tr>
+<tr>
+<td>2026-04-26</td>
+<td>81,615</td>
+<td>+85.2%</td>
+<td>58,321</td>
+<td>2.39</td>
+</tr>
+<tr>
+<td>2025-10-26</td>
+<td>57,006</td>
+<td>—</td>
+<td>31,910</td>
+<td>1.30</td>
+</tr>
+</tbody>
+</table></div>
+<ul>
+<li>Fact: Revenue growth is still accelerating; net margin approx. 63.7%.</li>
+<li>Counterpoint: Sequentially, revenue rose +17.9% but net income only +2.3%, with EPS moving from 2.39 to 2.46. Profit growth is clearly lagging revenue. Inference: possibly gross margin compression or one-off items; needs verification.</li>
+</ul>
+<p><strong>6. Valuation</strong></p>
+<ul>
+<li>GAAP P/E (TTM) of 27.0x, at the 1st percentile of its recent history and below the mean minus 1 standard deviation.
+<ul>
+<li>Caveat: The historical range spans only 26.7–35.2x over a short sample period, so its usefulness is limited.</li>
+</ul>
+</li>
+<li>Forward P/E of 13.7x (forward EPS $15.61), PEG 0.46.
+<ul>
+<li>Warning: Forward EPS is 97% above TTM GAAP EPS. Even annualizing the latest quarter's EPS gives only about $9.8, or roughly 22x. The forward valuation based on $15.61 may be optimistic and should be read only as &quot;market expectations.&quot;</li>
+</ul>
+</li>
+<li>P/S 17x, EV/EBITDA 25.3x.</li>
+<li>Peer comparison: data gap.</li>
+</ul>
+<p><strong>7. Balance Sheet</strong></p>
+<ul>
+<li>XBRL basis: cash $22.4B, long-term debt $33.4B.</li>
+<li>yfinance basis: cash $62.5B (inference: includes marketable securities), total debt $38.9B.</li>
+<li>Free cash flow of $41.8B; financial position is very solid.</li>
+</ul>
+<p><strong>Fundamental Conclusion</strong>: Growth and profitability are top-tier and valuation sits near its own historical lows. This is the core reason to own NVDA.</p>
+<hr />
+<h2 id='en4'>Layer 3: Fund Flows &amp; Positioning</h2>
+<p><strong>8/9c. Insiders</strong></p>
+<ul>
+<li>Fact: 0 purchases and 43 sales over the past 365 days, totaling $1.44B.</li>
+<li>Director Mark Stevens is the main seller:
+<ul>
+<li>On 09-04, sold approx. 620K shares at $230–234, not under a 10b5-1 plan.</li>
+<li>On 09-02, filed Form 144 to sell a further 5 million shares, approx. $1.09B.</li>
+</ul>
+</li>
+<li>CEO and CFO sales are almost entirely under 10b5-1 plans or tax withholding; weak signal.</li>
+<li>Inference: Stevens' large discretionary selling above $230, with substantial additional shares pending sale, will create persistent supply at $225–235.</li>
+<li>Reliability: The insider regression (beta 0.076, t=0.58) is not significant. Some factors are significant (CFO purchases b=+0.030, t=2.58; CEO b=−0.022, t=−2.63), but they apply to purchases, and NVDA has none, so they do not apply. Sales serve only as background on supply pressure.</li>
+</ul>
+<p><strong>9. 13F (As of 2026-06-30, lagging approx. 2.5 months)</strong></p>
+<ul>
+<li>5,966 institutional holders, up 102 from the prior quarter.
+<ul>
+<li>316 new positions, 1,076 increased, 645 reduced, 214 exited.</li>
+<li>Total institutional holdings up a net 2.92%.</li>
+</ul>
+</li>
+<li>High-hit-rate institutions (top 20%): 91 buyers, 90 sellers, essentially balanced.</li>
+<li>High-hit-rate institutions specializing in semiconductors are also balanced:
+<ul>
+<li>Added: Peregrine, Cavalier, Pacific Point, Rakuten (+12%, position approx. $930M)</li>
+<li>Exited or reduced: Octahedron, Monolith, HIMENSION (−38%), Melqart (−49%), WT (exited)</li>
+</ul>
+</li>
+<li>Large holders:
+<ul>
+<li>Buyers: Norges initiated 326M shares (inference: a reporting-basis change, not active buying), FMR +3.2%, Susquehanna +135%</li>
+<li>Sellers: Janus exited 83M shares, CalPERS −33%, Point72 −94%, Citadel −37%</li>
+</ul>
+</li>
+<li><strong>9d Reliability</strong>: The 13F cross-sectional regression beta=−0.050, t=−2.23, is significantly negative. Following high-hit-rate institutions is ineffective out of sample, even slightly contrarian, so it serves only as background. No signal_factors have |t|≥2 (portfolio weight t=1.85 is closest), so 13F changes cannot be used for timing.</li>
+<li>Conclusion: Institutional crowding is high and the holder base is stable; hedge funds (Point72, Citadel) cut in Q2, and marginal buyers are mainly passive and long-only money.</li>
+</ul>
+<p><strong>9b. Members of Congress</strong></p>
+<ul>
+<li>Recent activity is mostly small sales: Whitehouse sold 08-13, Booker 08-11, Cisneros 08-18.</li>
+<li>Cleo Fields (skill percentile 98.5%) made a small purchase on 06-26.</li>
+<li>Pelosi bought 2027-01 expiry $100-strike calls in 2025-12 while selling 20,000 shares.</li>
+<li>Regression beta −0.033, t=−0.31, not significant; background only.</li>
+</ul>
+<p><strong>10. Cost Basis Distribution</strong></p>
+<ul>
+<li>Average cost $189.68; 80.4% of holders in profit, 19.6% underwater, concentrated 0–20% above the current price.</li>
+<li>Cost-basis peaks: $210.75 (current), $219.25 (overhead resistance), $199.43 and $181.96 (support).</li>
+<li>70% of holdings concentrated at $172–218. Profitable holders have not reached the 90% warning threshold, but there is underwater supply at $219–236 overhead, plus Stevens' selling pressure.</li>
+</ul>
+<p><strong>11. Short Interest</strong></p>
+<ul>
+<li>Short interest at 1.29% of float, 2.33 days to cover; no basis for a short squeeze.</li>
+</ul>
+<hr />
+<h2 id='en5'>Layer 4: Technicals</h2>
+<p><strong>12. Moving Averages</strong></p>
+<div class='tbl'><table>
+<thead>
+<tr>
+<th>MA5</th>
+<th>MA10</th>
+<th>MA20</th>
+<th>MA50</th>
+<th>MA100</th>
+<th>MA200</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>214.7</td>
+<td>220.5</td>
+<td>218.3</td>
+<td>213.4</td>
+<td>211.3</td>
+<td>197.6</td>
+</tr>
+</tbody>
+</table></div>
+<ul>
+<li>Moving averages are intertwined; price is below MA20 and hugging MA50 (+0.25%).</li>
+<li>Short-term MA convergence at 2.69% (&lt;3%), signaling an imminent directional move; direction depends on whether a breakout comes on volume.</li>
+<li>The 50-day remains above the 200-day; the long-term structure is intact.</li>
+</ul>
+<p><strong>13. Price &amp; Volume</strong></p>
+<ul>
+<li>Over the past 20 days, the up-day to down-day volume ratio is 0.8, with heavier volume on down days.</li>
+<li>OBV is declining while the 20-day price trend is still up, a &quot;price up, OBV down&quot; divergence; watch for distribution.</li>
+<li>5-day volume is 0.81x the 50-day average; a low-volume pullback.</li>
+</ul>
+<p><strong>14. Volume Spikes</strong>: No days above 2.5x average volume in the past 60 days.</p>
+<p><strong>15. Volume Profile</strong></p>
+<ul>
+<li>Point of Control (POC) $209.86; value area $175.6–226.1.</li>
+<li>High-volume nodes: 209.9, 218.9, 208.1, 211.7, 200.9, corroborating the cost-basis peaks at $210.75 and $199.43.</li>
+</ul>
+<p><strong>16. Momentum &amp; Volatility</strong></p>
+<ul>
+<li>RSI 46.9, neutral.</li>
+<li>MACD histogram −1.57, flipping negative from +0.42 five days ago; momentum is weakening.</li>
+<li>Bollinger Bands $205.5–231.2; bandwidth at the 35.7th percentile over 1 year, no notable squeeze.</li>
+<li>ATR14 = $7.52 (3.5%); HV20 44.75%.</li>
+<li>Outperformed SPY by 2.47% over the past 3 months; −4.26% over 1 week, −9.4% from the 52-week high.</li>
+</ul>
+<p><strong>Technical Conclusion</strong>: Pulling back above the $205–210 support zone with weak momentum and volume. The more likely path is a test of $205–210 first, then MA200 around $198.</p>
+<hr />
+<h2 id='en6'>Layer 5: Options Market</h2>
+<p><strong>17. Max Pain</strong></p>
+<div class='tbl'><table>
+<thead>
+<tr>
+<th>Expiry</th>
+<th>Max Pain</th>
+<th>vs. Current Price</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>09-18 (Friday OPEX)</td>
+<td>$205</td>
+<td>−4.2%</td>
+</tr>
+<tr>
+<td>10-16 (monthly)</td>
+<td>$200</td>
+<td>−6.5%</td>
+</tr>
+</tbody>
+</table></div>
+<ul>
+<li>Both are below the current price, implying a near-term downward &quot;magnet&quot; effect.</li>
+</ul>
+<p><strong>18. OI Walls</strong></p>
+<ul>
+<li>09-18: call walls at $230, $250, $240; put walls at $180, $200, $210.</li>
+<li>10-16: largest call OI at $180 (deep ITM) and $220; put walls at $200, $195.</li>
+<li>Conclusion: support at $200–210, resistance at $220–230.</li>
+</ul>
+<p><strong>19. Put/Call Ratio</strong></p>
+<ul>
+<li>Volume PCR 0.70, OI PCR 0.77; neutral with a slight bullish tilt, not extreme.</li>
+</ul>
+<p><strong>20. Implied Volatility</strong></p>
+<ul>
+<li>30-day ATM IV of 33% is below HV20 of 44.75%; options are relatively cheap, favoring long-premium or spread strategies.</li>
+<li>09-18 put skew +15 points, indicating strong near-term downside hedging demand; 10-16 skew only +2.9, relatively flat.</li>
+<li>30-day expected move ±7.7%, implying roughly $197–230.</li>
+</ul>
+<p><strong>21. GEX</strong>: Net GEX +$565M per 1%, in positive gamma. Dealers will sell rallies and buy dips, dampening volatility ahead of Friday OPEX and making range-bound trading likely.</p>
+<p><strong>22. Unusual Activity</strong></p>
+<ul>
+<li>Approx. 210K same-day $215 puts traded near the bid, skewing to active selling; $217.5 puts skewed to active buying. Both are intraday positioning; weak signal.</li>
+<li>Active buying in 10-16 $215 and $220 calls, with combined premium of approx. $16.7M; someone is betting on a rebound within a month.</li>
+<li>Approx. $23M of deep ITM 09-18 $150 calls bought; inference: stock replacement or synthetic position.</li>
+<li>Large trades in 09-18 $280 puts; inference: hedging or closing, not directional.</li>
+<li>Overall: no clear signs of informed trading.</li>
+</ul>
+<hr />
+<h2 id='en7'>Layer 6: Synthesis &amp; Trading Plan</h2>
+<p><strong>23. Bull vs. Bear Evidence</strong></p>
+<div class='tbl'><table>
+<thead>
+<tr>
+<th>Bull Case</th>
+<th>Weight</th>
+<th>Bear Case</th>
+<th>Weight</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Revenue +106% YoY and accelerating, net margin approx. 64%</td>
+<td>High</td>
+<td>First Fed hike in 3 years (hawkish +6.4), 10-year Treasury at 5.01%</td>
+<td>High</td>
+</tr>
+<tr>
+<td>GAAP P/E at the 1st percentile of its own history</td>
+<td>High</td>
+<td>Director Stevens actively selling above $230, with a further 5M-share Form 144 pending; zero insider buys all year</td>
+<td>Medium</td>
+</tr>
+<tr>
+<td>Average analyst target $329, broadly raised after earnings</td>
+<td>Medium</td>
+<td>Broad market below its 50-day MA; NVDA beta 1.92</td>
+<td>High</td>
+</tr>
+<tr>
+<td>Multiple support layers at $200–210: POC, cost-basis peak, put wall, MA50/MA100</td>
+<td>Medium</td>
+<td>OBV divergence, MACD histogram negative, heavier volume on down days</td>
+<td>Medium</td>
+</tr>
+<tr>
+<td>Active buying of October calls, IV below HV, positive gamma guards against sharp drops</td>
+<td>Low</td>
+<td>This month's Max Pain $200–205 below current price; last quarter's sequential profit growth only +2.3%</td>
+<td>Medium</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>24. Scorecard</strong></p>
+<div class='tbl'><table>
+<thead>
+<tr>
+<th>Dimension</th>
+<th>Score</th>
+<th>Weight</th>
+<th>Weighted</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Macro/Market Environment</td>
+<td>3.5</td>
+<td>15%</td>
+<td>5.25</td>
+</tr>
+<tr>
+<td>Event Risk</td>
+<td>5.0</td>
+<td>10%</td>
+<td>5.0</td>
+</tr>
+<tr>
+<td>Fundamentals/Valuation</td>
+<td>8.0</td>
+<td>25%</td>
+<td>20.0</td>
+</tr>
+<tr>
+<td>Fund Flows &amp; Positioning</td>
+<td>4.5</td>
+<td>20%</td>
+<td>9.0</td>
+</tr>
+<tr>
+<td>Technicals</td>
+<td>5.0</td>
+<td>20%</td>
+<td>10.0</td>
+</tr>
+<tr>
+<td>Options Structure</td>
+<td>5.5</td>
+<td>10%</td>
+<td>5.5</td>
+</tr>
+<tr>
+<td><strong>Total</strong></td>
+<td></td>
+<td></td>
+<td><strong>≈56</strong></td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>25. Rating</strong>: <strong>Hold (bullish bias; buy on pullback)</strong>, Medium confidence.</p>
+<ul>
+<li>Existing holders: continue to hold.</li>
+<li>No position: do not chase at $214; scale in on a pullback per the plan below.</li>
+</ul>
+<p><strong>26. Trading Plan</strong></p>
+<ul>
+<li><strong>Entry</strong>, 1% per tranche, 3% total:
+<ol>
+<li>$207–208: lower edge of MA50, near the POC</li>
+<li>$203–204: near 09-18 Max Pain and the put wall</li>
+<li>$199–200: cost-basis peak, October put wall, above MA200</li>
+</ol>
+</li>
+<li><strong>Stop loss</strong>: close below $189.
+<ul>
+<li>Rationale: −1.4×ATR below the $199 cost-basis peak.</li>
+<li>Per-trade risk: approx. −7.4% based on an average cost of about $204; at a 3% position, portfolio risk is approx. 0.22%.</li>
+</ul>
+</li>
+<li><strong>Targets</strong>:
+<ul>
+<li>T1 $230 (call wall, Stevens' selling level), approx. +12.7%, risk/reward approx. 1.7.</li>
+<li>T2 $250 (call wall, an extension above the $236 52-week high), approx. +22.5%, risk/reward approx. 3.0.</li>
+</ul>
+</li>
+<li><strong>Position adjustments</strong>:
+<ul>
+<li>If price reclaims $220 on volume (recovering MA20 and MA10) and the broad market reclaims its 50-day MA, add up to 5%.</li>
+<li>Do not add ahead of PCE (09-30) and nonfarm payrolls (10-02).</li>
+<li>Trim by 1/3 before the 11-17 earnings release.</li>
+</ul>
+</li>
+<li><strong>Options strategy</strong> (IV below HV, favoring long spreads): buy the 11-20 expiry $210/$240 call spread to capture the pre-earnings run-up and rebound.
+<ul>
+<li>Alternatively, sell 10-16 expiry $200 cash-secured puts; however, IV is not elevated, so the risk/reward is mediocre. Secondary choice.</li>
+</ul>
+</li>
+</ul>
+<p><strong>27. Invalidation Conditions</strong></p>
+<ul>
+<li>Close below $189, or a high-volume break below MA200 (approx. $198) not recovered within 3 days: exit.</li>
+<li>Hot PCE or payrolls, the market starts pricing another hike on 10-28, and the 10-year Treasury holds above 5.2%: downgrade to wait-and-see, with position capped at 1%.</li>
+<li>The 8-K Item 1.01/2.03 discloses unfavorable terms, or Stevens accelerates selling, or other executives begin non-plan sales.</li>
+<li>Upside: a high-volume breakout above $236 (52-week high) would show the wait-and-see stance is too conservative; chase up to 3%.</li>
+</ul>
+<p><strong>28. Watchlist</strong></p>
+<div class='tbl'><table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Event or Indicator</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>09-18</td>
+<td>Quarterly OPEX: watch whether the $205 Max Pain and $210 put wall hold</td>
+</tr>
+<tr>
+<td>09-22</td>
+<td>FOMC minutes: any bias toward further hikes</td>
+</tr>
+<tr>
+<td>09-30</td>
+<td>PCE and GDP</td>
+</tr>
+<tr>
+<td>10-02</td>
+<td>Nonfarm payrolls</td>
+</tr>
+<tr>
+<td>Mid-October</td>
+<td>CPI (date unavailable)</td>
+</tr>
+<tr>
+<td>10-16</td>
+<td>Monthly OPEX (Max Pain $200)</td>
+</tr>
+<tr>
+<td>10-28</td>
+<td>FOMC</td>
+</tr>
+<tr>
+<td>Around 11-14</td>
+<td>Q3 13F filings (check whether Point72/Citadel rebuilt positions)</td>
+</tr>
+<tr>
+<td>11-17</td>
+<td>Earnings</td>
+</tr>
+<tr>
+<td>Ongoing</td>
+<td>Stevens' Form 4 progress; whether OBV turns up; 10-year Treasury and US Dollar Index</td>
+</tr>
+</tbody>
+</table></div>
+<p>This analysis is for research reference only and does not constitute investment advice.</p>
+</article></div></body></html>
