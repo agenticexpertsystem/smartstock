@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SmartStock · 分析与数据</title>
+<link rel="stylesheet" href="options/style.css">
+<style>
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px}
+.card h3{margin:0 0 4px;font-size:15px;color:var(--fg);text-transform:none;letter-spacing:0}
+.card p{margin:4px 0 0;color:var(--muted);font-size:13px}
+.card a{color:var(--accent);text-decoration:none;font-weight:600}
+ul.rep{margin:6px 0 0;padding-left:18px}
+ul.rep li{margin:3px 0}
+ul.rep a{color:var(--accent);text-decoration:none}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header><h1>SmartStock</h1><span class="sub">期权数据 · 量化回测 · 个股与机构分析</span></header>
+
+  <section>
+    <h2>交互工具</h2>
+    <div class="grid">
+      <div class="card">
+        <h3><a href="options/">📊 期权数据浏览器</a></h3>
+        <p>标普 500 全部成分股的期权链 (34 万+ 合约, 33 个到期日)。浏览器内直接读取 parquet:
+           按年化权利金/IV-HV 筛选、逐个到期日与行权价查看、IV 期限结构与微笑、未平仓分布、导出 CSV/JSON。</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>研究报告</h2>
+    <div class="grid">
+      <div class="card">
+        <h3>策略与统计</h3>
+        <ul class="rep">
+          <li><a href="report/put_backtest_20260917.html">卖 Put 回测</a> — 时点股票池、非重叠样本、双向聚类、VRP 敏感性</li>
+          <li><a href="report/entity_winrate_20260917.html">机构/内部人/议员 胜率回归检验</a></li>
+          <li><a href="report/follow_horizon_20260917.html">跟谁、跟多久: 1/3/6 个月胜率</a></li>
+          <li><a href="report/follow_backtest_20260916.html">跟单回测</a> · <a href="report/smart_money_20260917.html">Smart Money 排行榜</a></li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>个股</h3>
+        <ul class="rep">
+          <li><a href="report/ALMS_20260917_position_analysis.html">ALMS 投资分析</a> (中英双语) ·
+              <a href="report/ALMS_20260917.html">数据包</a></li>
+          <li><a href="report/NVDA_20260916_position_analysis.html">NVDA 投资分析</a> ·
+              <a href="report/NVDA_20260916.html">数据包</a></li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>人物与机构</h3>
+        <ul class="rep">
+          <li><a href="report/member_Nancy_Pelosi_20260917.html">Nancy Pelosi 逐笔跟单证据</a> ·
+              <a href="report/member_Nancy_Pelosi_calls_20260917.html">Call 到期收益</a></li>
+          <li><a href="report/fund_Duquesne_Druckenmiller_20260917.html">Druckenmiller (Duquesne) 13F 调仓</a></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>数据与代码</h2>
+    <p class="note">数据: <code>stockdata/option/chains_YYYYMMDD.parquet</code> (只保留当天, 全部到期日) ·
+      审核记录: <code>review/</code> ·
+      采集与分析代码在 <code>aiagent/tools/</code> (本仓库外)。</p>
+    <div class="warnbox">CBOE 延迟报价 (约 15 分钟), 不可用于成交决策; 未平仓量不含买卖方向, 不等于支撑/阻力;
+      所有回测与分析仅供研究参考, 不构成投资建议。</div>
+  </section>
+</div>
+</body>
+</html>

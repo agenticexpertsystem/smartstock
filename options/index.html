@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="zh" data-theme="">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>期权数据浏览器 · Options browser</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>期权数据浏览器</h1>
+    <span class="sub" id="meta">加载中…</span>
+    <span class="spacer"></span>
+    <span class="pill" id="src"></span>
+    <button id="theme" title="切换主题">🌓</button>
+  </header>
+
+  <div id="status">
+    <div>正在读取 <span id="file"></span> …</div>
+    <div class="prog"><i id="bar"></i></div>
+    <div class="note" id="hint">首次加载需下载约 7 MB 的 parquet 文件, 之后全部筛选/排序都在本地完成</div>
+  </div>
+
+  <main id="app" class="hide">
+    <!-- 全市场 -->
+    <section id="listView">
+      <h2>全部股票 <span class="pill" id="nList"></span></h2>
+      <div class="bar">
+        <input id="q" placeholder="搜索代码/名称…" size="16">
+        <select id="sector"><option value="">全部行业</option></select>
+        <label>到期天数 <input id="dteMin" type="number" value="20" min="0" style="width:60px"> –
+          <input id="dteMax" type="number" value="60" min="0" style="width:60px"></label>
+        <label>目标 Delta <input id="tgtDelta" type="number" value="0.20" step="0.05" min="0.05" max="0.95" style="width:64px"></label>
+        <label>最小 OI <input id="minOi" type="number" value="100" style="width:70px"></label>
+        <label>最大点差 <input id="maxSpread" type="number" value="0.2" step="0.05" style="width:64px"></label>
+        <button id="csv">导出 CSV</button>
+      </div>
+      <div class="tbl"><table id="list"><thead></thead><tbody></tbody></table></div>
+      <p class="note">点击代码查看该股票的全部到期日与行权价。年化 = 权利金/行权价 × 365/到期天数 (现金担保卖 put)。</p>
+    </section>
+
+    <!-- 个股 -->
+    <section id="tickerView" class="hide">
+      <h2><span id="tkName"></span> <button id="back">← 返回列表</button>
+        <button id="jsonBtn">导出 JSON</button></h2>
+      <div class="kpis" id="kpis"></div>
+      <div class="charts">
+        <div class="chart"><h4>IV 期限结构 (ATM IV vs 到期天数)</h4><svg id="chTerm"></svg></div>
+        <div class="chart"><h4>IV 微笑 (选中到期日)</h4><svg id="chSmile"></svg>
+          <div class="legend"><span class="pos">■ Call</span><span class="neg">■ Put</span></div></div>
+        <div class="chart"><h4>未平仓量分布 (选中到期日)</h4><svg id="chOi"></svg>
+          <div class="legend"><span class="pos">■ Call OI</span><span class="neg">■ Put OI</span><span>┊ 现价</span></div></div>
+      </div>
+
+      <h3>按到期日</h3>
+      <div class="tbl" style="max-height:34vh"><table id="exp"><thead></thead><tbody></tbody></table></div>
+
+      <h3>合约明细 <span class="pill" id="expSel"></span></h3>
+      <div class="bar">
+        <label>类型 <select id="typ"><option value="">全部</option><option value="P">Put</option><option value="C">Call</option></select></label>
+        <label>行权价范围 ±<input id="band" type="number" value="15" step="5" style="width:60px">%</label>
+        <label>最小 OI <input id="minOi2" type="number" value="0" style="width:70px"></label>
+        <button id="csv2">导出 CSV</button>
+      </div>
+      <div class="tbl"><table id="chain"><thead></thead><tbody></tbody></table></div>
+    </section>
+
+    <section>
+      <h2>数据说明</h2>
+      <div class="warnbox">
+        CBOE 延迟报价 (约 15 分钟), <b>不可用于成交决策</b>;
+        未平仓量 (OI) 不含买卖方向, <b>不等于支撑/阻力</b>;
+        <code>mid</code> 仅在双边报价 (bid&gt;0 且 ask&gt;0) 时计算, 否则为空;
+        <code>IV Rank</code> 需要 ≥20 天本地历史快照, 积累完成前为空。
+      </div>
+      <p class="note">数据源文件: <code id="srcPath"></code> · 由 <code>aiagent/tools/options_collect.py</code> 生成 ·
+        本页所有汇总 (max pain / OI 墙 / 年化权利金 / IV 微笑) 均由该文件即时计算。</p>
+    </section>
+  </main>
+</div>
+<script type="module" src="app.js"></script>
+</body>
+</html>
