@@ -23,3 +23,25 @@
 - CBOE 延迟报价 (约 15 分钟), **不可用于成交决策**
 - 未平仓量 (OI) 不含买卖方向, **不等于支撑/阻力**
 - 无期权、停牌或当日抓取失败的成分股不在文件中 (见 meta 的 `tickers_missing`)
+
+## 到期日覆盖
+本快照含 **28 个到期日**, 从最近周度到 **547 天后的 LEAPS** (2028-03)。
+`by_expiry_YYYYMMDD.csv` 为 **股票 × 到期日** 一行, 共 5,642 行, 字段:
+`ticker, expiry, dte, spot, call_oi, put_oi, pcr_oi, call_vol, put_vol, atm_iv, implied_move_pct,
+max_pain, max_pain_vs_spot_pct, call_oi_wall, put_oi_wall, p20_strike/delta/bid/ask/mid/iv/oi/ann_yield, sector`
+
+## 两个工具
+```bash
+# 1) 采集 (一条命令完成: 股票池 -> CBOE -> 导出四个文件 + 本地历史库)
+python aiagent/tools/options_collect.py                      # 标普500, 到期 <= 75 天
+python aiagent/tools/options_collect.py --max-dte 550        # 含 LEAPS (本快照)
+python aiagent/tools/options_collect.py --universe liquid --max-dte 120
+python aiagent/tools/options_collect.py --tickers NVDA ALMS
+
+# 2) 查看明细
+python aiagent/tools/options_view.py --ticker AAPL                       # 全部到期日 + 每个行权价
+python aiagent/tools/options_view.py --ticker AAPL --expiry 2027-01-15 --type P
+python aiagent/tools/options_view.py --list --sort ann_yield --min-oi 500 --max-spread 0.10
+python aiagent/tools/options_view.py --html                              # 索引页 + 每只股票一页
+```
+`--html` 生成的 `view/` 约 57MB, 未入库 (见 .gitignore), 需要时本地重建即可。
