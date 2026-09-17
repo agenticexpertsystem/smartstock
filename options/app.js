@@ -2,7 +2,7 @@
    - hyparquet 解析 parquet (纯 JS, 无后端)
    - 行数据存成列式数组, 34 万行也能流畅筛选
    - 所有汇总 (每股一行 / 每到期日 / max pain / OI 墙 / IV 微笑) 均在本地计算 */
-import { asyncBufferFromUrl, parquetRead } from 'https://cdn.jsdelivr.net/npm/hyparquet@1.31.1/+esm'
+import { parquetRead } from 'https://cdn.jsdelivr.net/npm/hyparquet@1.31.1/+esm'
 
 const DATA_DIR = '../stockdata/option'
 const $ = s => document.querySelector(s)
@@ -28,12 +28,41 @@ async function findFile() {
   throw new Error('未找到 chains_*.parquet (最近 45 天)')
 }
 
+/** 下载整个文件为 ArrayBuffer (带进度), 并包装成 hyparquet 需要的 AsyncBuffer */
+async function fetchBuffer(url) {
+  const res = await fetch(url)
+  if (!res.ok) throw new Error(`下载失败 HTTP ${res.status}`)
+  const total = +(res.headers.get('content-length') || 0)
+  let buf
+  if (res.body && total) {                       // 流式读取以显示进度
+    const reader = res.body.getReader()
+    const chunks = []
+    let got = 0
+    for (;;) {
+      const { done, value } = await reader.read()
+      if (done) break
+      chunks.push(value); got += value.length
+      $('#bar').style.width = Math.min(70, got / total * 70).toFixed(0) + '%'
+    }
+    const all = new Uint8Array(chunks.reduce((n, c) => n + c.length, 0))
+    let off = 0
+    for (const c of chunks) { all.set(c, off); off += c.length }
+    buf = all.buffer
+  } else {
+    buf = await res.arrayBuffer()
+  }
+  $('#bar').style.width = '72%'
+  return { byteLength: buf.byteLength, slice: (s, e) => buf.slice(s, e ?? buf.byteLength) }
+}
+
+
 async function load() {
   const { url, stamp, size } = await findFile()
   $('#file').textContent = url.split('/').pop() + (size ? ` (${(size / 1e6).toFixed(1)} MB)` : '')
   $('#srcPath').textContent = url
-  const file = await asyncBufferFromUrl({ url })
-  $('#bar').style.width = '35%'
+  // 整份下载再解析: GitHub Pages 会对 parquet 做 gzip, 且 Range 作用在压缩后的字节上,
+  // 直接用 range 读 footer 会拿到 gzip 数据 (报错 "footer != PAR1")。
+  const file = await fetchBuffer(url)
   await parquetRead({
     file, rowFormat: 'object',
     onComplete: data => {
