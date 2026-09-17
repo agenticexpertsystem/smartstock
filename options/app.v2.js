@@ -67,7 +67,7 @@ async function fetchBuffer(url, bust = false) {
 async function load() {
   const { url, stamp, size } = await findFile()
   $('#file').textContent = url.split('/').pop() + (size ? ` (${(size / 1e6).toFixed(1)} MB)` : '')
-  $('#srcPath').textContent = url
+  const sp = $('#srcPath'); if (sp) sp.textContent = url
   // 整份下载再解析: GitHub Pages 会对 parquet 做 gzip, 且 Range 作用在压缩后的字节上,
   // 直接用 range 读 footer 会拿到 gzip 数据 (报错 "footer != PAR1")。
   let file
@@ -199,8 +199,8 @@ function listRows() {
     if (q && !t.includes(q) && !String(inf.name || '').toUpperCase().includes(q)) continue
     const idx = byTicker.get(t).filter(i => D.dte[i] >= lo && D.dte[i] <= hi)
     const p = pickPut(idx, tgt)
-    if (p && (p.oi < minOi || !(p.spread <= maxSp))) continue
-    if (!p && (minOi > 0 || isFinite(maxSp))) continue
+    // 默认全部显示 (没有合格 put 的股票留空); 勾选"只看可交易"才按 OI/点差过滤
+    if ($('#tradableOnly').checked && (!p || p.oi < minOi || !(p.spread <= maxSp))) continue
     out.push({ ...inf, dte: p ? D.dte[p.i] : NaN, ...(p || {}) })
   }
   return out
@@ -235,11 +235,12 @@ function renderList() {
     const xa = isFinite(x) ? x : -Infinity, ya = isFinite(y) ? y : -Infinity
     return (xa - ya) * sortDir
   })
-  $('#nList').textContent = `${data.length} 只`
   $('#list').tHead.innerHTML = '<tr>' + LIST_COLS.map(([k, h]) =>
     `<th data-k="${k}" class="${k === 'ticker' || k === 'name' || k === 'sector' ? 'l' : ''}">${h}${sortKey === k ? (sortDir > 0 ? ' ▲' : ' ▼') : ''}</th>`).join('') + '</tr>'
-  $('#list').tBodies[0].innerHTML = data.slice(0, 600).map(r =>
+  const lim = +$('#rowLimit').value || data.length
+  $('#list').tBodies[0].innerHTML = data.slice(0, lim).map(r =>
     `<tr data-t="${r.ticker}">` + LIST_COLS.map(([, , f]) => f(r)).join('') + '</tr>').join('')
+  $('#nList').textContent = `${data.length} 只` + (data.length > lim ? ` · 显示前 ${lim}` : '')
   window._list = data
 }
 
@@ -282,20 +283,27 @@ function selectExpiry(e) {
 }
 
 function renderChain() {
-  const ex = expiries(cur).find(o => o.expiry === curExpiry)
+  const exs = expiries(cur)
+  const ex = exs.find(o => o.expiry === curExpiry)
   if (!ex) return
-  const spot = D.spot[ex.rows[0]], band = (+$('#band').value || 100) / 100, minOi = +$('#minOi2').value || 0
-  const ty = $('#typ').value
-  const idx = ex.rows.filter(i => Math.abs(D.strike[i] / spot - 1) <= band && (D.oi[i] || 0) >= minOi &&
-    (!ty || D.type[i] === ty)).sort((a, b) => (D.type[b] === 'P' ? 1 : 0) - (D.type[a] === 'P' ? 1 : 0) || D.strike[a] - D.strike[b])
-  const H = ['类型', '行权价', '距现价', '买价', '卖价', '中间价', 'IV', 'Delta', 'Gamma', 'Theta', 'Vega', 'OI', '成交']
-  $('#chain').tHead.innerHTML = '<tr>' + H.map((h, j) => `<th class="${j === 0 ? 'l' : ''}">${h}</th>`).join('') + '</tr>'
+  const all = $('#allExp').checked
+  const spot = D.spot[ex.rows[0]]
+  const band = $('#band').value === '' ? Infinity : (+$('#band').value / 100)
+  const minOi = +$('#minOi2').value || 0, ty = $('#typ').value
+  const src = all ? exs.flatMap(o => o.rows) : ex.rows
+  const idx = src.filter(i => Math.abs(D.strike[i] / spot - 1) <= band && (D.oi[i] || 0) >= minOi &&
+    (!ty || D.type[i] === ty))
+    .sort((a, b) => (D.dte[a] - D.dte[b]) || ((D.type[b] === 'P' ? 1 : 0) - (D.type[a] === 'P' ? 1 : 0)) || (D.strike[a] - D.strike[b]))
+  const H = ['到期日', '天', '类型', '行权价', '距现价', '买价', '卖价', '中间价', 'IV', 'Delta', 'Gamma', 'Theta', 'Vega', 'OI', '成交']
+  $('#chain').tHead.innerHTML = '<tr>' + H.map((h, j) => `<th class="${j <= 2 ? 'l' : ''}">${h}</th>`).join('') + '</tr>'
   $('#chain').tBodies[0].innerHTML = idx.map(i => `<tr>
+    <td class="l mut">${D.expiry[i]}</td><td class="l">${int(D.dte[i])}</td>
     <td class="l ${D.type[i] === 'P' ? 'neg' : 'pos'}">${D.type[i] === 'P' ? 'Put' : 'Call'}</td>
     <td>${fmt(D.strike[i])}</td><td class="${cls(D.strike[i] / spot - 1)}">${pct(D.strike[i] / spot - 1)}</td>
     <td>${fmt(D.bid[i])}</td><td>${fmt(D.ask[i])}</td><td>${fmt(D.mid[i])}</td><td>${pct(D.iv[i])}</td>
     <td>${fmt(D.delta[i], 3)}</td><td>${fmt(D.gamma[i], 4)}</td><td>${fmt(D.theta[i], 3)}</td>
     <td>${fmt(D.vega[i], 3)}</td><td>${int(D.oi[i])}</td><td>${int(D.volume[i])}</td></tr>`).join('')
+  $('#nChain').textContent = `${idx.length} 个合约` + (all ? ` · 全部 ${exs.length} 个到期日` : '')
   window._chain = idx
 }
 
@@ -361,6 +369,47 @@ function drawOi(ex) {
     `<line x1="${sx(spot)}" y1="8" x2="${sx(spot)}" y2="${H - 22}" stroke="currentColor" stroke-opacity=".5" stroke-dasharray="3 3"/>`
 }
 
+/* ---------- 原始数据浏览: 直接分页显示整份 parquet ---------- */
+const RAW_COLS = ['ticker', 'expiry', 'dte', 'type', 'strike', 'bid', 'ask', 'mid', 'iv', 'delta', 'gamma',
+  'theta', 'vega', 'oi', 'volume', 'spot', 'iv30', 'hv20', 'sector']
+const RAW_LEFT = new Set(['ticker', 'expiry', 'type', 'sector'])
+let rawPage = 0, rawIdx = null
+
+function rawFilter() {
+  const q = $('#rawQ').value.trim().toUpperCase()
+  const ty = $('#rawType').value
+  const minOi = +$('#rawOi').value || 0
+  const dlo = $('#rawDteMin').value === '' ? -1e9 : +$('#rawDteMin').value
+  const dhi = $('#rawDteMax').value === '' ? 1e9 : +$('#rawDteMax').value
+  const out = []
+  for (let i = 0; i < rows; i++) {
+    if (q && D.ticker[i] !== q) continue
+    if (ty && D.type[i] !== ty) continue
+    if ((D.oi[i] || 0) < minOi) continue
+    if (D.dte[i] < dlo || D.dte[i] > dhi) continue
+    out.push(i)
+  }
+  return out
+}
+
+function renderRaw(reset = true) {
+  if (reset || !rawIdx) { rawIdx = rawFilter(); rawPage = 0 }
+  const per = +$('#rawPer').value || 200
+  const total = rawIdx.length, pages = Math.max(1, Math.ceil(total / per))
+  rawPage = Math.min(Math.max(rawPage, 0), pages - 1)
+  const slice = rawIdx.slice(rawPage * per, rawPage * per + per)
+  $('#rawInfo').textContent = `${total.toLocaleString()} 行 · 第 ${rawPage + 1}/${pages} 页`
+  $('#raw').tHead.innerHTML = '<tr>' + RAW_COLS.map(c => `<th class="${RAW_LEFT.has(c) ? 'l' : ''}">${c}</th>`).join('') + '</tr>'
+  $('#raw').tBodies[0].innerHTML = slice.map(i => '<tr>' + RAW_COLS.map(c => {
+    const v = D[c][i]
+    if (RAW_LEFT.has(c)) return `<td class="l ${c === 'ticker' ? 'tk' : 'mut'}">${v == null ? '' : v}</td>`
+    if (c === 'oi' || c === 'volume' || c === 'dte') return `<td>${int(v)}</td>`
+    if (c === 'iv' || c === 'iv30' || c === 'hv20') return `<td>${pct(v)}</td>`
+    const dec = c === 'gamma' ? 4 : (c === 'delta' || c === 'theta' || c === 'vega') ? 3 : 2
+    return `<td>${fmt(v, dec)}</td>`
+  }).join('') + '</tr>').join('')
+}
+
 /* ---------- 导出 ---------- */
 function download(name, text, type = 'text/csv;charset=utf-8') {
   const a = document.createElement('a')
@@ -383,6 +432,20 @@ function bind() {
   for (const id of ['#q', '#sector', '#dteMin', '#dteMax', '#tgtDelta', '#minOi', '#maxSpread'])
     $(id).addEventListener('input', renderList)
   for (const id of ['#typ', '#band', '#minOi2']) $(id).addEventListener('input', renderChain)
+  $('#allExp').addEventListener('change', renderChain)
+  $('#tradableOnly').addEventListener('change', renderList)
+  $('#rowLimit').addEventListener('change', renderList)
+  for (const id of ['#rawQ', '#rawType', '#rawOi', '#rawDteMin', '#rawDteMax'])
+    $(id).addEventListener('input', () => renderRaw(true))
+  $('#rawPer').addEventListener('change', () => renderRaw(false))
+  $('#rawPrev').onclick = () => { rawPage--; renderRaw(false) }
+  $('#rawNext').onclick = () => { rawPage++; renderRaw(false) }
+  $('#raw').addEventListener('click', e => {
+    const td = e.target.closest('td.tk')
+    if (td) { showTicker(td.textContent.trim()); window.scrollTo(0, 0) }
+  })
+  $('#rawCsv').onclick = () => download(`options_raw_${Date.now()}.csv`, toCsv(RAW_COLS,
+    (rawIdx || []).slice(0, 100000).map(i => Object.fromEntries(RAW_COLS.map(c => [c, D[c][i]])))))
   $('#csv').onclick = () => download(`options_list_${Date.now()}.csv`,
     toCsv(['ticker', 'name', 'sector', 'spot', 'iv30', 'hv20', 'iv_hv', 'pcr', 'dte', 'strike', 'delta', 'bid', 'ask',
       'mid', 'annYield', 'spread', 'oi'], window._list || []))
@@ -410,7 +473,7 @@ const contract = i => ({ strike: D.strike[i], bid: D.bid[i], ask: D.ask[i], mid:
 load().then(() => {
   const secs = [...new Set(tickers.map(t => tickerInfo(t).sector).filter(Boolean))].sort()
   $('#sector').innerHTML = '<option value="">全部行业</option>' + secs.map(s => `<option>${s}</option>`).join('')
-  bind(); renderList()
+  bind(); renderList(); renderRaw(true)
 }).catch(err => {
   $('#status').innerHTML = `<div class="warnbox">
     <b>加载失败: ${err.message}</b><br><br>
