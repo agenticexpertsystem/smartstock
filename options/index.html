@@ -12,14 +12,14 @@
     <h1>期权数据浏览器</h1>
     <span class="sub" id="meta">加载中…</span>
     <span class="spacer"></span>
-    <span class="pill" id="src"></span>
+    <span class="pill" id="src"></span><span class="pill" id="ver"></span>
     <button id="theme" title="切换主题">🌓</button>
   </header>
 
   <div id="status">
     <div>正在读取 <span id="file"></span> …</div>
     <div class="prog"><i id="bar"></i></div>
-    <div class="note" id="hint">首次加载需下载约 7 MB 的 parquet 文件, 之后全部筛选/排序都在本地完成</div>
+    <div class="note" id="hint">首次加载需下载约 7 MB 的 parquet 文件, 之后全部筛选/排序都在本地完成<br>若长时间无响应或报错, 请强制刷新 (Ctrl+F5 / Cmd+Shift+R)</div>
   </div>
 
   <main id="app" class="hide">
@@ -79,6 +79,6 @@
     </section>
   </main>
 </div>
-<script type="module" src="app.js"></script>
+<script type="module" src="app.js?v=2026091703"></script>
 </body>
 </html>

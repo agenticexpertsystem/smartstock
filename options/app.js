@@ -4,6 +4,7 @@
    - 所有汇总 (每股一行 / 每到期日 / max pain / OI 墙 / IV 微笑) 均在本地计算 */
 import { parquetRead } from 'https://cdn.jsdelivr.net/npm/hyparquet@1.31.1/+esm'
 
+const APP_VERSION = '2026-09-17c'      // 出现在页脚, 便于确认浏览器是否在用最新版
 const DATA_DIR = '../stockdata/option'
 const $ = s => document.querySelector(s)
 const fmt = (v, n = 2) => (v == null || !isFinite(v)) ? '—' : v.toLocaleString('en-US', { minimumFractionDigits: n, maximumFractionDigits: n })
@@ -21,7 +22,8 @@ async function findFile() {
     const s = new Date(d.getTime() - i * 864e5).toISOString().slice(0, 10).replace(/-/g, '')
     const url = `${DATA_DIR}/chains_${s}.parquet`
     try {
-      const r = await fetch(url, { method: 'HEAD' })
+      let r = await fetch(url, { method: 'HEAD', cache: 'no-store' })
+      if (!r.ok) r = await fetch(url, { headers: { Range: 'bytes=0-0' }, cache: 'no-store' })
       if (r.ok) return { url, stamp: s, size: +(r.headers.get('content-length') || 0) }
     } catch (e) { /* 继续往前找 */ }
   }
@@ -29,8 +31,8 @@ async function findFile() {
 }
 
 /** 下载整个文件为 ArrayBuffer (带进度), 并包装成 hyparquet 需要的 AsyncBuffer */
-async function fetchBuffer(url) {
-  const res = await fetch(url)
+async function fetchBuffer(url, bust = false) {
+  const res = await fetch(bust ? `${url}?t=${Date.now()}` : url, { cache: 'no-store' })
   if (!res.ok) throw new Error(`下载失败 HTTP ${res.status}`)
   const total = +(res.headers.get('content-length') || 0)
   let buf
@@ -52,6 +54,12 @@ async function fetchBuffer(url) {
     buf = await res.arrayBuffer()
   }
   $('#bar').style.width = '72%'
+  // 校验 parquet 魔数: 若被 gzip/代理改写, 这里就能给出明确原因
+  const head = new Uint8Array(buf, 0, 4), tail = new Uint8Array(buf, buf.byteLength - 4)
+  const magic = a => String.fromCharCode(...a)
+  if (magic(head) !== 'PAR1' || magic(tail) !== 'PAR1') {
+    throw new Error(`文件不是完整的 parquet (开头 "${magic(head)}", 结尾 "${magic(tail)}", ${buf.byteLength} 字节)`)
+  }
   return { byteLength: buf.byteLength, slice: (s, e) => buf.slice(s, e ?? buf.byteLength) }
 }
 
@@ -62,7 +70,13 @@ async function load() {
   $('#srcPath').textContent = url
   // 整份下载再解析: GitHub Pages 会对 parquet 做 gzip, 且 Range 作用在压缩后的字节上,
   // 直接用 range 读 footer 会拿到 gzip 数据 (报错 "footer != PAR1")。
-  const file = await fetchBuffer(url)
+  let file
+  try {
+    file = await fetchBuffer(url)
+  } catch (e) {
+    console.warn('首次读取失败, 绕过缓存重试:', e.message)
+    file = await fetchBuffer(url, true)          // 缓存里可能是旧的/被压缩的响应
+  }
   await parquetRead({
     file, rowFormat: 'object',
     onComplete: data => {
@@ -103,6 +117,7 @@ async function load() {
   $('#src').textContent = 'CBOE 延迟报价'
   $('#bar').style.width = '100%'
   $('#status').classList.add('hide'); $('#app').classList.remove('hide')
+  $('#ver').textContent = `v${APP_VERSION}`
 }
 
 /* ---------- 派生计算 ---------- */
@@ -397,8 +412,13 @@ load().then(() => {
   $('#sector').innerHTML = '<option value="">全部行业</option>' + secs.map(s => `<option>${s}</option>`).join('')
   bind(); renderList()
 }).catch(err => {
-  $('#status').innerHTML = `<div class="warnbox">加载失败: ${err.message}<br>
-    请确认 <code>stockdata/option/chains_YYYYMMDD.parquet</code> 存在, 且通过 http(s) 访问本页
-    (本地可运行 <code>python -m http.server</code> 后打开 http://localhost:8000/options/)</div>`
+  $('#status').innerHTML = `<div class="warnbox">
+    <b>加载失败: ${err.message}</b><br><br>
+    1) <b>多数情况是浏览器缓存了旧版脚本</b> — 请强制刷新: Windows <code>Ctrl+F5</code> / Mac <code>Cmd+Shift+R</code>
+       (本页版本 v${APP_VERSION}; 若强制刷新后仍报 footer != PAR1, 说明加载的仍是旧脚本)<br>
+    2) 确认 <code>stockdata/option/chains_YYYYMMDD.parquet</code> 存在<br>
+    3) 必须通过 http(s) 打开本页, 不能用 file:// 直接打开
+       (本地可运行 <code>python -m http.server</code> 后访问 http://localhost:8000/options/)
+    </div>`
   console.error(err)
 })
