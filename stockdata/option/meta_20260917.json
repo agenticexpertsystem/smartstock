@@ -1,6 +1,6 @@
 {
  "snapshot_date": "2026-09-17",
- "generated_at": "2026-09-17T15:37:04",
+ "generated_at": "2026-09-17T15:45:33",
  "source": "CBOE delayed quotes (cdn.cboe.com), ~15 min delay",
  "universe": "S&P 500",
  "tickers_requested": 503,

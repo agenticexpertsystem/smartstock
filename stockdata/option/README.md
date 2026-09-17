@@ -4,12 +4,18 @@
 
 | 文件 | 内容 |
 |---|---|
-| `chains_YYYYMMDD/<代码>.json` | 完整期权链, **每只股票一个 JSON**, 按到期日嵌套 (calls / puts 两个数组), 行权价在现价 ±35% 内, **全部已挂牌到期日** |
-| `chains_YYYYMMDD/_index.json` | 文件清单: 每只股票的到期日数、合约数、现价 |
+| `chains_YYYYMMDD.parquet` | 完整期权链: 每个合约一行, **全部已挂牌到期日**, 行权价在现价 ±35% 内 (JSON 约 15 倍体积, 每日快照会让仓库迅速膨胀, 故用 parquet) |
 | `summary_YYYYMMDD.csv` | 每只股票一行: 现价、IV30、HV20、IV/HV、PCR、以及 30-45 天 ~0.20 delta 的 put 报价 |
 | `meta_YYYYMMDD.json` | 快照来源、覆盖率、缺失代码、字段说明与局限 |
 
-## chains JSON 结构
+## chains 字段
+`ticker, date, expiry, type (C/P), strike, bid, ask, last, iv, delta, gamma, theta, vega, oi, volume, dte, mid, sector`
+
+需要人可读的 JSON 时按需导出单只股票 (约 200KB):
+```bash
+python aiagent/tools/options_view.py --json AAPL          # -> AAPL_20260917.json
+```
+结构如下:
 ```json
 { "ticker": "AAPL", "name": "Apple Inc.", "sector": "Information Technology",
   "snapshot_date": "20260917", "spot": 336.71, "iv30": 0.2337, "hv20": 0.237,
