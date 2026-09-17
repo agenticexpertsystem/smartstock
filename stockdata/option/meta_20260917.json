@@ -1,0 +1,24 @@
+{
+ "snapshot_date": "2026-09-17",
+ "generated_at": "2026-09-17T13:37:59",
+ "source": "CBOE delayed quotes (cdn.cboe.com), ~15 min delay",
+ "universe": "S&P 500",
+ "tickers_requested": 503,
+ "tickers_with_options": 502,
+ "tickers_missing": [
+  "NVR"
+ ],
+ "contracts": 189886,
+ "filters": "expiry <= 75 days, strike within +/-35% of spot",
+ "columns_note": {
+  "mid": "仅双边报价 (bid>0 且 ask>0) 才计算, 否则 NaN",
+  "p20_*": "30-45 天、delta 最接近 -0.20 且有买价的 put",
+  "iv_rank": "需 >= 20 天历史快照, 本地积累中时为空",
+  "hv20": "来自本地 close.parquet 的 20 日历史波动率 (年化)"
+ },
+ "caveats": [
+  "延迟报价, 非实时; 不可用于成交决策",
+  "OI 不含买卖方向, 不等于支撑/阻力",
+  "退市/停牌/无期权的成分股不在文件中"
+ ]
+}
