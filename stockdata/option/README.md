@@ -19,8 +19,7 @@
 
 ## 两个工具
 ```bash
-# 采集 (默认: 标普500, 全部到期日, 只保留当天快照)
-python aiagent/tools/options_collect.py
+# 采集 (默认: 标普500, 全部到期日, python aiagent/tools/options_collect.py
 python aiagent/tools/options_collect.py --max-dte 120          # 只要 120 天内
 python aiagent/tools/options_collect.py --tickers NVDA ALMS
 python aiagent/tools/options_collect.py --keep-days 5          # 保留最近 5 天
@@ -37,3 +36,27 @@ python aiagent/tools/options_view.py --html                    # 索引页 + 每
 - CBOE 延迟报价 (约 15 分钟), **不可用于成交决策**
 - 未平仓量 (OI) 不含买卖方向, **不等于支撑/阻力**
 - 无期权、停牌或当日抓取失败的成分股不在文件中
+
+## 保留策略：逐日累积，不删除
+
+`chains_YYYYMMDD.parquet` —— 每个**交易日**一个文件，全部保留。
+
+之所以不再只留当天：**CBOE 只提供当前报价，没有历史接口。** 今天不存，这一天的
+IV 曲面就永远补不回来了。而 `mispricing_scan.py` 的第三层（`vrp_z`，即"这只股票
+自己历史上正常的 IV−RV 是多少"）与 IV Rank 都必须靠逐日累积才能算出来。
+
+文件按**交易日**命名（见 `aiagent/tools/market_cal.py`），周末/假日/开盘前采集
+会归到上一个交易日，不会造出重复的假交易日。
+
+### 体积
+
+每天约 7 MB（35 万张合约 × 28 字段）。按每年约 252 个交易日估算，**一年约 1.8 GB**，
+而 git 会永久保留每个文件。GitHub 建议单仓库控制在 1 GB 以内、硬上限 5 GB，
+所以大约**半年后需要处理**。届时可选：
+
+1. 老数据瘦身——只保留研究真正用到的部分（如 |delta| 0.05–0.50 的合约），体积可降一个量级
+2. 改用 Git LFS 或独立的数据仓库 / Release 附件
+3. 本地保留全量（`aiagent/data/options/chains/`），仓库只发布瘦身版
+
+暂时**不做** zstd 压缩：只省约 17%（7.1 → 5.9 MB），但网页浏览器用的 hyparquet
+原生只支持 snappy，换掉会让在线浏览器直接读不了。

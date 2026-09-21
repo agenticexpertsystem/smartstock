@@ -4,8 +4,9 @@
    - 所有汇总 (每股一行 / 每到期日 / max pain / OI 墙 / IV 微笑) 均在本地计算 */
 import { parquetRead } from 'https://cdn.jsdelivr.net/npm/hyparquet@1.31.1/+esm'
 
-const APP_VERSION = '2026-09-17c'      // 出现在页脚, 便于确认浏览器是否在用最新版
+const APP_VERSION = '2026-09-20a'      // 出现在页脚, 便于确认浏览器是否在用最新版
 const DATA_DIR = '../stockdata/option'
+const SCAN_DAYS = 120          // 往前扫多少天找快照
 const $ = s => document.querySelector(s)
 const fmt = (v, n = 2) => (v == null || !isFinite(v)) ? '—' : v.toLocaleString('en-US', { minimumFractionDigits: n, maximumFractionDigits: n })
 const pct = (v, n = 1) => (v == null || !isFinite(v)) ? '—' : (v * 100).toFixed(n) + '%'
@@ -16,18 +17,33 @@ const D = {}            // 列式数据
 let rows = 0, tickers = [], byTicker = new Map(), cur = null, curExpiry = null
 
 /* ---------- 加载 ---------- */
-async function findFile() {
+async function probe(stamp) {
+  const url = `${DATA_DIR}/chains_${stamp}.parquet`
+  try {
+    let r = await fetch(url, { method: 'HEAD', cache: 'no-store' })
+    if (!r.ok) r = await fetch(url, { headers: { Range: 'bytes=0-0' }, cache: 'no-store' })
+    if (r.ok) return { url, stamp, size: +(r.headers.get('content-length') || 0) }
+  } catch (e) { /* 该日无快照 */ }
+  return null
+}
+
+/** 扫描最近 SCAN_DAYS 天, 列出**全部**已有快照 (快照现在逐日累积, 不再只保留当天) */
+async function findFiles() {
   const d = new Date()
-  for (let i = 0; i < 45; i++) {
-    const s = new Date(d.getTime() - i * 864e5).toISOString().slice(0, 10).replace(/-/g, '')
-    const url = `${DATA_DIR}/chains_${s}.parquet`
-    try {
-      let r = await fetch(url, { method: 'HEAD', cache: 'no-store' })
-      if (!r.ok) r = await fetch(url, { headers: { Range: 'bytes=0-0' }, cache: 'no-store' })
-      if (r.ok) return { url, stamp: s, size: +(r.headers.get('content-length') || 0) }
-    } catch (e) { /* 继续往前找 */ }
+  const stamps = []
+  for (let i = 0; i < SCAN_DAYS; i++) {
+    const t = new Date(d.getTime() - i * 864e5)
+    if (t.getUTCDay() === 0 || t.getUTCDay() === 6) continue      // 周末不会有快照
+    stamps.push(t.toISOString().slice(0, 10).replace(/-/g, ''))
   }
-  throw new Error('未找到 chains_*.parquet (最近 45 天)')
+  const found = []
+  for (let i = 0; i < stamps.length; i += 12) {                   // 分批并发, 避免一次几十个请求
+    const got = await Promise.all(stamps.slice(i, i + 12).map(probe))
+    found.push(...got.filter(Boolean))
+    if (found.length && i >= 24) break          // 已经找到一些且扫得够远, 不再往前
+  }
+  if (!found.length) throw new Error(`未找到 chains_*.parquet (最近 ${SCAN_DAYS} 天)`)
+  return found.sort((x, y) => y.stamp.localeCompare(x.stamp))     // 新的在前
 }
 
 /** 下载整个文件为 ArrayBuffer (带进度), 并包装成 hyparquet 需要的 AsyncBuffer */
@@ -64,8 +80,11 @@ async function fetchBuffer(url, bust = false) {
 }
 
 
-async function load() {
-  const { url, stamp, size } = await findFile()
+let SNAPS = []
+
+async function load(pick) {
+  if (!SNAPS.length) SNAPS = await findFiles()
+  const { url, stamp, size } = pick || SNAPS[0]
   $('#file').textContent = url.split('/').pop() + (size ? ` (${(size / 1e6).toFixed(1)} MB)` : '')
   const sp = $('#srcPath'); if (sp) sp.textContent = url
   // 整份下载再解析: GitHub Pages 会对 parquet 做 gzip, 且 Range 作用在压缩后的字节上,
@@ -113,7 +132,25 @@ async function load() {
     }
   })
   const dd = `${stamp.slice(0, 4)}-${stamp.slice(4, 6)}-${stamp.slice(6)}`
-  $('#meta').textContent = `${dd} · ${tickers.length} 只 · ${rows.toLocaleString()} 个合约 · ${new Set(D.expiry).size} 个到期日`
+  $('#meta').textContent = `${tickers.length} 只 · ${rows.toLocaleString()} 个合约 · ${new Set(D.expiry).size} 个到期日`
+  const sel = $('#snap')
+  if (sel) {
+    const fmt = t => `${t.slice(0, 4)}-${t.slice(4, 6)}-${t.slice(6)}`
+    sel.innerHTML = SNAPS.map(f => `<option value="${f.stamp}"${f.stamp === stamp ? ' selected' : ''}>`
+      + `${fmt(f.stamp)}${f.stamp === SNAPS[0].stamp ? ' (最新)' : ''}</option>`).join('')
+    sel.title = `共 ${SNAPS.length} 个交易日的快照`
+    sel.onchange = async () => {
+      const f = SNAPS.find(x => x.stamp === sel.value)
+      $('#app').classList.add('hide'); $('#status').classList.remove('hide')
+      $('#bar').style.width = '5%'
+      try {
+        await load(f)
+        bind(); renderList(); renderRaw(true)
+      } catch (e) {
+        $('#status').innerHTML = `<div class="warnbox"><b>加载 ${sel.value} 失败: ${e.message}</b></div>`
+      }
+    }
+  }
   $('#src').textContent = 'CBOE 延迟报价'
   $('#bar').style.width = '100%'
   $('#status').classList.add('hide'); $('#app').classList.remove('hide')
