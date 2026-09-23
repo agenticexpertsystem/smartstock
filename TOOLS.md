@@ -204,6 +204,36 @@ python tools/options_collect.py              # 今日期权快照
 
 ---
 
+## 五点五、每日自动任务
+
+`tools/daily_options.ps1` + Windows 计划任务 **SmartStock Daily Options**（每天 17:00）：
+
+1. 采集当日期权链 → `stockdata/option/chains_YYYYMMDD.parquet`
+2. 定价偏离扫描 → `stockdata/mispricing/mispricing_log_YYYYMMDD.parquet`
+3. `git add` / `commit` / `pull --rebase` / `push`
+
+```powershell
+# 手工执行
+powershell -ExecutionPolicy Bypass -File tools\daily_options.ps1
+powershell -ExecutionPolicy Bypass -File tools\daily_options.ps1 -NoPush   # 只跑不推
+powershell -ExecutionPolicy Bypass -File tools\daily_options.ps1 -Force    # 重采当日
+
+schtasks /Run   /TN "SmartStock Daily Options"    # 立即触发一次
+schtasks /Query /TN "SmartStock Daily Options" /V /FO LIST
+schtasks /Change /TN "SmartStock Daily Options" /DISABLE
+```
+
+日志：`data/logs/daily_options_YYYYMMDD.log`
+
+设计要点：
+- **每一步各自判断是否已完成，最后统一提交。** 早期版本发现当日快照已存在就直接退出 —— 那样一旦某次采集成功但推送失败，那些文件就再也没机会被提交了。
+- 非交易日由 `market_cal.py` 识别，采集自动跳过，不产生空提交。
+- `StartWhenAvailable=true`：17:00 时机器关着，开机后会补跑。
+- **仅在用户登录时运行**（`Interactive only`）。git 凭据存在 Windows 凭据管理器里，必须有交互式登录会话才能读到；改成"不登录也运行"会导致推送失败。
+- 失败重试 3 次，间隔 15 分钟；单次最长 2 小时。
+
+---
+
 ## 六、典型工作流
 
 **每日**
